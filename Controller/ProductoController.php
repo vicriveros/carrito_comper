@@ -1,0 +1,155 @@
+<?php
+session_start();
+if(isset($_GET["page"])){
+	$page=$_GET["page"];
+}else{
+	$page=0;
+}
+
+include('../_conexion.php');
+
+switch($page){
+
+	case 1:
+		$json = array();
+		$json['msj'] = 'Producto Agregado';
+		$json['success'] = true;
+	
+//		if (isset($_POST['producto']) && $_POST['producto']!='' && isset($_POST['cantidad']) && $_POST['cantidad']!='') {
+		if ($_POST['producto']!='' && $_POST['cantidad'] > 0) {
+			$datos = pg_query ($con, "SELECT codfab, precio FROM articulos WHERE idart='".$_POST['idart']."'") or die ("Problemas en $-campos:".pg_last_error ());
+				$dt=pg_fetch_array($datos);
+				$precio= $dt["precio"];
+				$codigo = $dt["codfab"];
+									
+						
+			try {
+				$cantidad = $_POST['cantidad'];
+				$producto = $_POST['producto'];
+				$idart = $_POST['idart'];
+				$total=$cantidad*$precio;
+				
+				if(count($_SESSION['detalle'])>0){
+					$ultimo = end($_SESSION['detalle']);
+					$count = $ultimo['id']+1;
+				}else{
+					$count = count($_SESSION['detalle'])+1;
+				}
+				$_SESSION['detalle'][$count] = array('id'=>$count, 'producto'=>$producto, 'cantidad'=>$cantidad, 'codigo'=>$codigo, 'idart'=>$idart, 'precio'=>$precio, 'total'=>$total);
+
+				$json['success'] = true;
+
+				echo json_encode($json);
+	
+			}catch (PDOException $e) {
+				$json['msj'] = $e->getMessage();
+				$json['success'] = false;
+				echo json_encode($json);
+			}
+		}else{
+				if ($_POST['codigo']!='' && $_POST['cantidad'] > 0) {
+					$datos = pg_query ($con, "SELECT nombres, idart, codfab, precio FROM articulos WHERE codfab='".$_POST['codigo']."'") or die ("Problemas en $-campos:".pg_last_error ());
+
+					
+					$row=pg_num_rows($datos);
+					if ($row>0){
+						while($dt=pg_fetch_array($datos)){
+							$producto = $dt["nombres"];
+							$idart =  $dt["idart"];
+							$precio= $dt["precio"];
+						}
+				try{
+					$cantidad = $_POST['cantidad'];
+					$codigo = $_POST['codigo'];
+					$total=$precio*$cantidad;
+					
+
+					if(count($_SESSION['detalle'])>0){
+						$ultimo = end($_SESSION['detalle']);
+						$count = $ultimo['id']+1;
+					}else{
+						$count = count($_SESSION['detalle'])+1;
+					}
+					$_SESSION['detalle'][$count] = array('id'=>$count, 'producto'=>$producto, 'cantidad'=>$cantidad, 'codigo'=>$codigo, 'idart'=>$idart, 'precio'=>$precio, 'total'=>$total);
+	
+					$json['success'] = true;
+	
+					echo json_encode($json);
+		
+				   }catch (PDOException $e) {
+					$json['msj'] = $e->getMessage();
+					$json['success'] = false;
+					echo json_encode($json);
+					}
+		
+					}else{
+						$json['msj'] = '¡Error! No se encuentra el Codigo de Barras.';
+						$json['success'] = false;
+						echo json_encode($json);					
+					}
+				}else{
+					$json['msj'] = 'Ingrese un producto y/o ingrese cantidad';
+					$json['success'] = false;
+					echo json_encode($json);
+				}
+		}
+		break;
+
+	case 2:
+		$json = array();
+		$json['msj'] = 'Producto Eliminado';
+		$json['success'] = true;
+	
+		if (isset($_POST['id'])) {
+			try {
+				unset($_SESSION['detalle'][$_POST['id']]);
+				$json['success'] = true;
+	
+				echo json_encode($json);
+	
+			} catch (PDOException $e) {
+				$json['msj'] = $e->getMessage();
+				$json['success'] = false;
+				echo json_encode($json);
+			}
+		}
+		break;
+
+	case 3:
+		$json = array();
+		$json['msj'] = 'Producto Editado';
+		$json['success'] = true;
+	
+		try{
+
+					$cantidad = $_POST['cantidad'];
+					$codigo = $_POST['codigo'];
+					$producto = $_POST['producto'];
+					$idart = $_POST['idart'];
+					$precio = $_POST['precio'] - $_POST['descuento'];
+					$total = $precio * $cantidad;
+
+					if(count($_SESSION['detalle'])>0){
+						$ultimo = end($_SESSION['detalle']);
+						$count = $ultimo['id']+1;
+					}else{
+						$count = count($_SESSION['detalle'])+1;
+					}
+					$_SESSION['detalle'][$count] = array('id'=>$count, 'producto'=>$producto, 'cantidad'=>$cantidad, 'codigo'=>$codigo, 'idart'=>$idart, 'precio'=>$precio, 'total'=>$total);
+
+					unset($_SESSION['detalle'][$_POST['id']]);
+	
+					$json['success'] = true;
+	
+					echo json_encode($json);
+		
+				   }catch (PDOException $e) {
+					$json['msj'] = $e->getMessage();
+					$json['success'] = false;
+					echo json_encode($json);
+					}
+		break;
+
+
+}
+?>
