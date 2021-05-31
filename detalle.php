@@ -53,34 +53,35 @@ if(count($_SESSION['detalle'])>0){
       </div>
 
       <div class="modal-body">
-		<div class="row">
+		<div class="form-row">
 			<input type="hidden" id="editar_id<?php echo $detalle['idart']?>" value="<?php echo $detalle['id'];?>">
 			<input type="hidden" id="editar_articulo<?php echo $detalle['idart']?>" value="<?php echo $detalle['idart'];?>">
 			<input type="hidden" id="editar_producto<?php echo $detalle['idart']?>" value="<?php echo $detalle['producto'];?>">
 			<input type="hidden" id="editar_codigo<?php echo $detalle['idart']?>" value="<?php echo $detalle['codigo'];?>">
-			<div class="col-md-4 editarArt"> 
-			<div class="form-group col-md-4">
-        		<strong>Cantidad:</strong>
-				<input id="editar_cantidad<?php echo $detalle['idart']?>" name="editar_cantidad" type="text" class="col-md-2 form-control" style="font-size:18px;" value='<?php echo $detalle['cantidad'];?>'/>
-			</div>
+			<div class="editarArt"> 
+        <div class="form-group col-md-12">
+          <strong>Cantidad:</strong>
+          <input id="editar_cantidad<?php echo $detalle['idart']?>" name="editar_cantidad" type="text" class="col-md-10 form-control" style="font-size:18px;" value='<?php echo $detalle['cantidad'];?>'/>
+        </div>
 
-			<div class="form-group col-md-4">
-				<div><strong>Precio:</strong>
-					<select id="editar_precio<?php echo $detalle['idart']?>" name="editar_precio" class="col-md-2 form-control">
-					  		<option value="<?php echo $dt['precio']; ?>" selected>Precio 1 - <?php echo number_format($dt['precio'], 0, ',', '.'); ?></option>
-					  		<option value="<?php echo $dt['precio2']; ?>" >Precio 2 - <?php echo number_format($dt['precio2'], 0, ',', '.'); ?></option>
-					  		<option value="<?php echo $dt['precio3']; ?>" >Precio 3 - <?php echo number_format($dt['precio3'], 0, ',', '.'); ?></option>
-					  		<option value="<?php echo $dt['precio4']; ?>" >Precio 4 - <?php echo number_format($dt['precio4'], 0, ',', '.'); ?></option>
-					</select>
-				  
-				</div>
-			</div>
+        <div class="form-group col-md-12">
+          <div><strong>Precio:</strong>
+            <select id="editar_precio<?php echo $detalle['idart']?>" name="editar_precio" class="col-md-10 form-control">
+                  <option value="<?php echo $dt['precio']; ?>" selected>Precio 1 - <?php echo number_format($dt['precio'], 0, ',', '.'); ?></option>
+                  <option value="<?php echo $dt['precio2']; ?>" >Precio 2 - <?php echo number_format($dt['precio2'], 0, ',', '.'); ?></option>
+                  <option value="<?php echo $dt['precio3']; ?>" >Precio 3 - <?php echo number_format($dt['precio3'], 0, ',', '.'); ?></option>
+                  <option value="<?php echo $dt['precio4']; ?>" >Precio 4 - <?php echo number_format($dt['precio4'], 0, ',', '.'); ?></option>
+            </select>
+            
+          </div>
+        </div>
 
-			<div class="form-group col-md-4">
-        		<strong>Descuento:</strong>
-				<input id="editar_descuento<?php echo $detalle['idart']?>" placeholder="Descuento" type="text" class="col-md-2 form-control" value="0" style="font-size:18px;" />
-			</div>
-			</div>
+        <div class="form-group col-md-12">
+          <strong>Descuento:</strong>
+          <input id="editar_descuento<?php echo $detalle['idart']?>" placeholder="Descuento" type="text" class="col-md-10 form-control" value="0" style="font-size:18px;" />
+        </div>
+
+			</div> <!-- edit art -->
 		</div>
       </div>
 

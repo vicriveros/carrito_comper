@@ -224,15 +224,15 @@
           </div>
       </div>
 
-    <div class="col-md-4">
+    <div class="form-row">
 
         <p style="font-size:18px; margin-top:30px;"><strong>Datos del Cliente:</strong></p>
-      <div class="form-group col-md-4">
+      <div class="form-group col-md-10">
             <strong>Nombre:</strong>
         <input id="txt_nombre" name="txt_nombre" type="text" class="form-control" style="font-size:18px;" disable="disable"/>
       </div>
 
-      <div class="form-group col-md-4">
+      <div class="form-group col-md-10">
             <strong>RUC:</strong>
         <input id="txt_ruc" name="txt_ruc" type="text" class=" form-control" style="font-size:18px;" disable="disable"/>
       </div>
