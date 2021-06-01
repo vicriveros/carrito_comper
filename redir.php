@@ -73,6 +73,8 @@
                   <center>
 					
 				<a href="cabecera.php" target="_parent" name="cerrarf"  id="cerrarf" class="btn btn-success btn-confirmar-venta" style="margin-top:20px;">¡Continuar!</a>
+
+        <a href="imp.php?identificador=<?php echo $_GET['id'] ?>" target="_parent" name="cerrarf"  id="cerrarf" class="btn btn-info btn-confirmar-venta" style="margin-top:20px;">¡Imprimir Factura!</a>
 					</center>
                 </div>
               

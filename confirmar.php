@@ -37,7 +37,7 @@ $_POST['txt_tot']=$totgral - $_POST['txt_desc'];
 			echo '<script>location.href="index.php";</script>';
 		}
 
-		$cnro =pg_query ($con, "SELECT max(nro) FROM cabventas WHERE idcaja=".$_SESSION['login_caja']) or die ("Problemas en $-campos:".pg_last_error ());
+		$cnro =pg_query ($con, "SELECT max(nro) FROM cabventas WHERE idcaja=".$_SESSION['login_idcaja']) or die ("Problemas en $-campos:".pg_last_error ());
 		$rn=pg_fetch_array($cnro);
 		$nnro=$rn[0];
 		$nro= $nnro+1;
@@ -70,7 +70,7 @@ $hoy=date('Y-m-d');
 $varf=$hoy.$pla;
 $nuevafecha = date('Y-m-d', strtotime($varf));
 
-	$sqlinsert="INSERT INTO cabventas (idventa, idclie, idvend , timb, nro, idcaja, efectivo, cheque, tarjeta, chequead, girost, depoban, idsucursal, ualta, falta, activo, tipofac, vence, exentas, grav5, grav10, iva5, iva10, tipvta, timbrado, estado) VALUES (".$idventa.", ".$clie.", ".$_SESSION['login_vendedor'].", ".$_SESSION['login_timb'].", ".$nro.", ".$_SESSION['login_caja'].", ".$_POST["efectivo"].", ".$_POST["cheque"].", ".$_POST["tarjeta"].", ".$_POST["chequead"].", ".$_POST["giros"].", ".$_POST["depositoban"].", ".$_SESSION['login_sucursal'].", ".$_SESSION['login_idusu'].", '".$fecha."', 1, ".$_POST['tipovta'].", '".$nuevafecha."', 0, 0, ".$gravada10.", 0, ".$iva10.", ".$_SESSION['login_deposito'].", ".$_SESSION['login_timbrado'].", 1)";
+$sqlinsert="INSERT INTO cabventas (idventa, idclie, idvend , timb, nro, idcaja, efectivo, cheque, tarjeta, chequead, girost, depoban, idsucursal, ualta, falta, activo, tipofac, vence, exentas, grav5, grav10, iva5, iva10, tipvta, timbrado, estado) VALUES (".$idventa.", ".$clie.", ".$_SESSION['login_vendedor'].", ".$_SESSION['login_timb'].", ".$nro.", ".$_SESSION['login_idcaja'].", ".$_POST["efectivo"].", ".$_POST["cheque"].", ".$_POST["tarjeta"].", ".$_POST["chequead"].", ".$_POST["giros"].", ".$_POST["depositoban"].", ".$_SESSION['login_sucursal'].", ".$_SESSION['login_idusu'].", '".$fecha."', 1, ".$_POST['tipovta'].", '".$nuevafecha."', 0, 0, ".$gravada10.", 0, ".$iva10.", ".$_SESSION['login_deposito'].", ".$_SESSION['login_timbrado'].", 1)";
 	$insertcab = pg_query ($con, $sqlinsert) or die ("Problemas en cabecera:".pg_last_error ());
 		
 
@@ -106,28 +106,8 @@ foreach($_SESSION['detalle'] as $k => $detalle){
 
 } /*fin de forech detalle*/
 
-
-
 unset($_SESSION['detalle']);
-
-/*if($_POST['tipovta']==2){
-	
-	$pla=' +'.$_POST['plazo'].' day ';
-	$varf=$fecha.$pla;
-	$nuevafecha = date('Y-m-d', strtotime($varf));
-
-$insql="INSERT INTO cuentas_clie (clie_id, cc_plazo, activo, fac_id, cc_fecha,cc_fecha_plazo, cc_moneda, cc_monto) 
-		VALUES (".$clie.",".$_POST['plazo'].",1,".$nro.", '".$fecha."', '".$nuevafecha."', 1, ".$_POST["txt_tot"].")";
-		pg_query ($con, $insql) or die ("Problemas en $-campos cuentas clie:".pg_last_error ());
-}
-echo '<script>location.href="imp_tk.php?fac='.$idventa.'";</script>';
-*/
-	echo '<script>location.href="redir.php";</script>';
+echo '<script>location.href="redir.php?id='.$idventa.'";</script>';
 }// fin del if de total
-/*}// fin del if de verificacion de pago
-else{
-	echo"<script>alert('¡No coinciden los montos!');</script>";
-	}*/
-//}// fin del if de envio
 
 ?>

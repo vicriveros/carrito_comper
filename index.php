@@ -6,33 +6,29 @@ session_start();
 
 if ($_POST['usuario'] != ''){
   $cl=md5($_POST['clave']);
-  #echo 'usr: '.$_POST['usuario'].' && pass:'.$cl;
-  $sql="SELECT aliasnomb, idusu FROM usuarios WHERE aliasnomb='".$_POST['usuario']."' and clave='".$cl."'";
+  $sql="SELECT aliasnomb, idusu, idcaja, idvend, iddeposito FROM usuarios WHERE aliasnomb='".$_POST['usuario']."' and clave='".$cl."'";
   $consulta=pg_query($con, $sql)or die ("Problemas en consulta ".pg_last_error ());
   $cant=pg_num_rows($consulta);
   $dt=pg_fetch_array($consulta);
   
     if ($cant > 0)
     {
-      $sql1="SELECT idcaja FROM detcaja WHERE irl = ".$_POST['caja'];
-      $cons=pg_query($con, $sql1)or die ("Problemas en consulta ".pg_last_error ());
-      $ca=pg_fetch_array($cons);
-      $sql2="SELECT nrocaja, idsucursal, timb, timbrado FROM cajas WHERE idcaja=".$ca['idcaja'];
+      $sql2="SELECT nrocaja, idsucursal, timb, timbrado FROM cajas WHERE idcaja=".$dt['idcaja'];
       $cons2=pg_query($con, $sql2)or die ("Problemas en consulta ".pg_last_error ());
       $nca=pg_fetch_array($cons2);
 
       unset($_SESSION['login_idusu']);
       unset($_SESSION['login_user']);
-      unset($_SESSION['login_caja']);
+      unset($_SESSION['login_idcaja']);
       unset($_SESSION['login_deposito']);
       unset($_SESSION['login_nrocaja']);
       unset($_SESSION['login_sucursal']);
       $_SESSION['login_idusu'] = $dt['idusu'];
       $_SESSION['login_user'] = $dt['aliasnomb'];
-      $_SESSION['login_caja'] = $_POST['caja'];
-      $_SESSION['login_vendedor'] = $_POST['vendedor'];
-      $_SESSION['login_deposito'] = $_POST['deposito'];
+      $_SESSION['login_vendedor'] = $dt['idvend'];
+      $_SESSION['login_deposito'] = $dt['iddeposito'];
       $_SESSION['login_nrocaja'] = $nca['nrocaja'];
+      $_SESSION['login_idcaja'] = $dt['idcaja'];
       $_SESSION['login_sucursal'] = $nca['idsucursal'];
       $_SESSION['login_timb'] = $nca['timb'];
       $_SESSION['login_timbrado'] = $nca['timbrado'];
@@ -74,55 +70,6 @@ if ($_POST['usuario'] != ''){
       <p class="login-box-msg">Iniciar Sesion</p>
 
       <form action="index.php" method="post">
-        <div class="input-group mb-3">
-          <div class="input-group">
-            <div class="input-group-addon"><span class="glyphicon glyphicon-usd" aria-hidden="true"></span></div>
-             <SELECT NAME="caja" id="caja" class="form-control"> 
-              <OPTION VALUE="0">Caja</OPTION> 
-              <?php 
-              $sql1="SELECT irl, idcaja FROM detcaja WHERE cierre = '1900-01-01 00:00:00'";
-              $cons=pg_query($con, $sql1)or die ("Problemas en consulta ".pg_last_error ());
-              while($ca=pg_fetch_array($cons)){
-               $sql2="SELECT nrocaja FROM cajas WHERE idcaja=".$ca['idcaja'];
-               $cons2=pg_query($con, $sql2)or die ("Problemas en consulta ".pg_last_error ());
-               $nca=pg_fetch_array($cons2);
-               echo '<OPTION VALUE="'.$ca['irl'].'">'.$nca['nrocaja'].'</OPTION> ';
-              }?>
-              
-            </SELECT>
-          </div>
-        </div>
-
-        <div class="input-group mb-3"> 
-          <div class="input-group">
-            <div class="input-group-addon"><span class="glyphicon glyphicon-usd" aria-hidden="true"></span></div>
-             <SELECT NAME="deposito" id="deposito" class="form-control"> 
-              <OPTION VALUE="0">Deposito</OPTION> 
-              <?php 
-              $sql1="SELECT iddeposito, nombres FROM depositos";
-              $cons=pg_query($con, $sql1)or die ("Problemas en consulta ".pg_last_error ());
-              while($ca=pg_fetch_array($cons)){
-               echo '<OPTION VALUE="'.$ca['iddeposito'].'">'.$ca['nombres'].'</OPTION> ';
-              }?>
-            </SELECT>
-          </div>
-        </div>
-
-        <div class="input-group mb-3"> 
-          <div class="input-group">
-            <div class="input-group-addon"><span class="glyphicon glyphicon-usd" aria-hidden="true"></span></div>
-             <SELECT NAME="vendedor" id="vendedor" class="form-control"> 
-              <OPTION VALUE="0">Vendedor</OPTION> 
-              <?php 
-              $sql1="SELECT idvend, nombres FROM vendedores";
-              $cons=pg_query($con, $sql1)or die ("Problemas en consulta ".pg_last_error ());
-              while($ca=pg_fetch_array($cons)){
-               echo '<OPTION VALUE="'.$ca['idvend'].'">'.$ca['nombres'].'</OPTION> ';
-              }?>
-              
-            </SELECT>
-          </div>
-        </div>
 
         <div class="input-group mb-3">
           <input type="text" class="form-control" placeholder="Usuario" name="usuario" id="usuario">

@@ -187,7 +187,7 @@
             
       <input id="confir" name="confir" type="hidden" value="1" />
 
-      <input id="txt_caja" name="txt_caja" type="hidden" value="<?php echo $_SESSION['login_caja']; ?>" />
+      <input id="txt_caja" name="txt_caja" type="hidden" value="<?php echo $_SESSION['login_idcaja']; ?>" />
       <input id="txt_deposito" name="txt_deposito" type="hidden" value="1" />
       <input id="txt_idclie" name="txt_idclie" type="hidden"  />
       <input id="tipovta" name="tipovta" type="hidden"  />

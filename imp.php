@@ -2,23 +2,26 @@
 @session_start();
 include('_conexion.php'); 
 
-
-	$sqlcab="SELECT clie_id, total_venta, fac_fecha, hora, id_caja, tipo_ventas, idventa, total_iva, total_iva5 FROM cab_ventas WHERE fac_nro=".$_GET["fac"]." and id_caja=".$_SESSION['login_caja'];
+	$sqlcab="SELECT idclie, nro, falta, idcaja, tipofac, idventa, exentas, grav5, grav10, iva5, iva10 FROM cabventas WHERE idventa=".$_GET["identificador"]." and idcaja=".$_SESSION['login_idcaja'];
 	$cab = pg_query ($con, $sqlcab) or die ("Problemas en $-campos cabecera:".pg_last_error ());
 	$cb=pg_fetch_array($cab);
 
-	$cf=strlen($_GET["fac"]);
+	$cf=strlen($cb['nro']);
 	$fal=7-$cf;
 	$nroini='';
 	for ($i = 1; $i <= $fal; $i++) {
     	$nroini.='0';
 	}
 
-	$sql2="SELECT nro FROM cajas WHERE id_caja=".$cb['id_caja'];
+	$sql2="SELECT nrocaja, timbrado, validez, idsucursal FROM cajas WHERE idcaja=".$_SESSION['login_idcaja'];
 	$cons2=pg_query($con, $sql2)or die ("Problemas en consulta ".pg_last_error ());
 	$nca=pg_fetch_array($cons2);
 
-	$sqlclie="SELECT clie_nombre, clie_ruc FROM clientes WHERE clie_id=". $cb['clie_id'];
+	$sql3="SELECT nrosuc FROM sucursal WHERE idsucursal=".$nca['idsucursal'];
+	$cons3=pg_query($con, $sql3)or die ("Problemas en consulta ".pg_last_error ());
+	$suc=pg_fetch_array($cons3);
+
+	$sqlclie="SELECT nombres, ruc FROM clientes WHERE idclie=". $cb['idclie'];
 	$clie = pg_query ($con, $sqlclie) or die ("Problemas en $-campos clie:".pg_last_error ());
 	$cl=pg_fetch_array($clie);
 
@@ -27,13 +30,12 @@ include('_conexion.php');
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" >
 <SCRIPT language="javascript">
-function imprimir()
-{ if ((navigator.appName == "Netscape")) { window.print() ;
-}
-else
-{ var WebBrowser = '<OBJECT ID="WebBrowser1" WIDTH=0 HEIGHT=0 CLASSID="CLSID:8856F961-340A-11D0-A96B-00C04FD705A2"></OBJECT>';
-document.body.insertAdjacentHTML('beforeEnd', WebBrowser); WebBrowser1.ExecWB(6, -1); WebBrowser1.outerHTML = "";
-}
+function imprimir(){ 
+	if ((navigator.appName == "Netscape")) { window.print() ;}
+	else{ 
+		var WebBrowser = '<OBJECT ID="WebBrowser1" WIDTH=0 HEIGHT=0 CLASSID="CLSID:8856F961-340A-11D0-A96B-00C04FD705A2"></OBJECT>';
+		document.body.insertAdjacentHTML('beforeEnd', WebBrowser); WebBrowser1.ExecWB(6, -1); WebBrowser1.outerHTML = "";
+	}
 }
 </SCRIPT>
 </HEAD>
@@ -50,18 +52,18 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser); WebBrowser1.ExecWB(6,
     	<td colspan="3" style="text-align:center;">Ruc:80091477-5</td>
     </tr>
     <tr>
-    	<td colspan="3" style="text-align:center;">Timbrado:11376188 - VTO:31/12/2016</td>
+    	<td colspan="3" style="text-align:center;">Timbrado:<?php echo $nca['timbrado'] ?> - VTO:<?php echo date("d-m-Y", strtotime($nca['validez'])) ?></td>
     </tr>
     <tr>
     	<td colspan="3" style="text-align:center;">Telefono:021 207 167</td>
     </tr>
     <tr>
-    	<td colspan="3" style="text-align:center;">Fecha y Hora de Emision: <?php echo $cb['fac_fecha'].' '.$cb['hora'] ?></td>
+    	<td colspan="3" style="text-align:center;">Fecha de Emision: <?php echo date("d-m-Y", strtotime($cb['falta']))?></td>
     </tr>
     <tr>
-    	<td colspan="3" style="text-align:center;">Factura <?php if ($cb['tipo_ventas'] == 1) { echo "Contado";}else{ echo "Credito";} ?>
+    	<td colspan="3" style="text-align:center;">Factura <?php if ($cb['tipofac'] == 1) { echo "Contado";}else{ echo "Credito";} ?>
             
-          N°:</br> 001-<?php echo $nca[0] ?>-<?php echo $nroini.$_GET["fac"] ?></td>
+          N°:</br> <?php echo $suc[0] ?>-<?php echo $nca[0] ?>-<?php echo $nroini.$cb["nro"] ?></td>
     </tr>
 
 	<tr>
@@ -80,32 +82,32 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser); WebBrowser1.ExecWB(6,
     </tr>
 <?php 
 $tot=0;
-	$sqldet="SELECT art_id, cantidad, punitario FROM det_ventas WHERE fac_nro=".$_GET['fac']." and idventa=".$cb['idventa'];
+	$sqldet="SELECT idart, cant, precio FROM detventas WHERE idventa=".$_GET['identificador'];
 	$det = pg_query ($con, $sqldet) or die ("Problemas en $-campos detalle1:".pg_last_error ());
 	
 	while($dt=pg_fetch_array($det)){
 	
-	$sqlart="SELECT art_nombre FROM articulos WHERE art_id=". $dt['art_id'];
+	$sqlart="SELECT nombres FROM articulos WHERE idart=". $dt['idart'];
 	$arti = pg_query ($con, $sqlart) or die ("Problemas en $-campos detalle art:".pg_last_error ());
 	$at=pg_fetch_array($arti);
-	$art=$at['art_nombre'];
+	$art=$at['nombres'];
 
-	$tot1=$dt['cantidad']*$dt['punitario'];
+	$tot1=$dt['cant']*$dt['precio'];
 	$tot=$tot+$tot1;
 ?>
 	<tr>
-    	<td width="38"><?php echo $dt['cantidad']; ?></td>
+    	<td width="38"><?php echo number_format($dt['cant'], 0, ',', '.'); ?></td>
     	<td width="176"><?php echo $art; ?></td>
-    	<td width="38"><?php echo number_format($dt['punitario'], 0, ',', '.'); ?></td>
+    	<td width="38"><?php echo number_format($dt['precio'], 0, ',', '.'); ?></td>
     	<td width="38"><?php echo number_format($tot1, 0, ',', '.'); ?></td>
     </tr>
     
  <?php 
  }
-$totiva=$cb['total_iva']+$cb['total_iva5'];
+$totiva=$cb['iva10']+$cb['iva5'];
  ?> 
 	<tr>
-    	<td colspan="3" width="176" style="text-align:left; font-size:22px; font-family:Arial;"><strong>Total:</strong> <?php echo  number_format($cb['total_venta'], 0, ',', '.') ?></td>
+    	<td colspan="3" width="176" style="text-align:left; font-size:22px; font-family:Arial;"><strong>Total:</strong> <?php echo  number_format($tot, 0, ',', '.') ?></td>
     </tr>
 
  	<tr>
@@ -115,10 +117,10 @@ $totiva=$cb['total_iva']+$cb['total_iva5'];
     	<th colspan="3" style="text-align:left; height:26px;"><strong>-- Datos del Cliente--</th>
     </tr>
 	<tr>
-    	<td colspan="3" style="text-align:left; height:26px;">Razon Social: <?php echo $cl['clie_nombre'] ?></td>
+    	<td colspan="3" style="text-align:left; height:26px;">Razon Social: <?php echo $cl['nombres'] ?></td>
     </tr>
 	<tr>
-    	<td colspan="3" style="text-align:left; height:26px;">RUC/CI: <?php echo $cl['clie_ruc'] ?></td>
+    	<td colspan="3" style="text-align:left; height:26px;">RUC/CI: <?php echo $cl['ruc'] ?></td>
     </tr>
   
 	<tr>
@@ -128,10 +130,10 @@ $totiva=$cb['total_iva']+$cb['total_iva5'];
     	<td colspan="3" style="text-align:left; height:26px;">Exenta: 0</td>
     </tr>
 	<tr>
-    	<td colspan="3" style="text-align:left; height:26px;">10%:<?php echo round($cb['total_iva']); ?></td>
+    	<td colspan="3" style="text-align:left; height:26px;">10%:<?php echo round($cb['iva10']); ?></td>
     </tr>
 	<tr>
-    	<td colspan="3" style="text-align:left; height:26px;">5%:<?php echo round($cb['total_iva5']); ?></td>
+    	<td colspan="3" style="text-align:left; height:26px;">5%:<?php echo round($cb['iva5']); ?></td>
     </tr>
 	<tr>
     	<td colspan="3" style="text-align:left; height:26px;"><strong>Total:<?php echo round($totiva); ?></td>
@@ -142,9 +144,7 @@ $totiva=$cb['total_iva']+$cb['total_iva5'];
  	<tr>
     	<td colspan="3" style="text-align:center; height:26px;">*Gracias por su preferencia*</td>
     </tr>
- 	<tr>
-    	<td colspan="3" style="text-align:center; height:26px;">Juan 3:16</td>
-    </tr>
+
 
 </table>
 </div>
@@ -152,7 +152,7 @@ $totiva=$cb['total_iva']+$cb['total_iva5'];
 </HTML>
 <script type="text/javascript">
 function redireccionarPagina() {
-	window.location = "carrito.php";
+	window.location = "cabecera.php";
 }
 setTimeout("redireccionarPagina()", 800);
 </script>
