@@ -72,12 +72,15 @@ $nuevafecha = date('Y-m-d', strtotime($varf));
 
 $sqlinsert="INSERT INTO cabventas (idventa, idclie, idvend , timb, nro, idcaja, efectivo, cheque, tarjeta, chequead, girost, depoban, idsucursal, ualta, falta, activo, tipofac, vence, exentas, grav5, grav10, iva5, iva10, tipvta, timbrado, estado) VALUES (".$idventa.", ".$clie.", ".$_SESSION['login_vendedor'].", ".$_SESSION['login_timb'].", ".$nro.", ".$_SESSION['login_idcaja'].", ".$_POST["efectivo"].", ".$_POST["cheque"].", ".$_POST["tarjeta"].", ".$_POST["chequead"].", ".$_POST["giros"].", ".$_POST["depositoban"].", ".$_SESSION['login_sucursal'].", ".$_SESSION['login_idusu'].", '".$fecha."', 1, ".$_POST['tipovta'].", '".$nuevafecha."', 0, 0, ".$gravada10.", 0, ".$iva10.", ".$_SESSION['login_deposito'].", ".$_SESSION['login_timbrado'].", 1)";
 	$insertcab = pg_query ($con, $sqlinsert) or die ("Problemas en cabecera:".pg_last_error ());
-		
+
+$sqlart="SELECT ultcosto FROM articulos WHERE idart=".$detalle["idart"];
+$datart = pg_query ($con, $sqlart) or die ("Problemas en $-campos ultcosto articulos:".pg_last_error ());
+$uc=pg_fetch_array($datart);
 
 foreach($_SESSION['detalle'] as $k => $detalle){
 	$tot_det=$detalle['cantidad']*$detalle['precio'];
-	$sqlinsertdet="INSERT INTO detventas (idventa, idart, cant, precio, falta, ivanum, idunidad, idunidad2, basimp, descu, cant2)
-	VALUES(".$idventa.", '".$detalle["idart"]."', ".$detalle["cantidad"].", ".$detalle["precio"].", '".$fecha."', '10', '0', '0', '100', '0', ".$detalle["cantidad"].")";
+	$sqlinsertdet="INSERT INTO detventas (idventa, idart, cant, precio, falta, ivanum, idunidad, idunidad2, basimp, descu, cant2, prdesc, costo)
+	VALUES(".$idventa.", '".$detalle["idart"]."', ".$detalle["cantidad"].", ".$detalle["precio"].", '".$fecha."', '10', '0', '0', '100', '0', ".$detalle["cantidad"].", ".$detalle["precio"].", ".$uc["ultcosto"].")";
 
 	$insertdet = pg_query ($con, $sqlinsertdet) or die ("Problemas en detalle:".pg_last_error ());
 

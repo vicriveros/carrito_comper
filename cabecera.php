@@ -195,6 +195,7 @@
       
     
     <div class="row">
+      <div id="metodo-pago">
       <div class="form-row">
         <div class="form-group col-md-4">
             <label for="inputEmail4">Efectivo</label>
@@ -209,6 +210,7 @@
             <input type="number" class="form-control" name="tarjeta" id="tarjeta" value="0">
           </div>
       </div>
+
       <div class="form-row">
         <div class="form-group col-md-4">
             <label for="inputEmail4">Cheque Ad</label>
@@ -223,20 +225,18 @@
             <input type="number" class="form-control" name="depositoban" id="depositoban" value="0">
           </div>
       </div>
+      </div> <!-- fin metodo pago -->
 
     <div class="form-row">
-
-        <p style="font-size:18px; margin-top:30px;"><strong>Datos del Cliente:</strong></p>
+      <p style="font-size:18px; margin-top:30px;"><strong>Datos del Cliente:</strong></p>
       <div class="form-group col-md-10">
-            <strong>Nombre:</strong>
+        <strong>Nombre:</strong>
         <input id="txt_nombre" name="txt_nombre" type="text" class="form-control" style="font-size:18px;" disable="disable"/>
       </div>
-
       <div class="form-group col-md-10">
-            <strong>RUC:</strong>
+        <strong>RUC:</strong>
         <input id="txt_ruc" name="txt_ruc" type="text" class=" form-control" style="font-size:18px;" disable="disable"/>
       </div>
-
     </div>
 
     </div>
@@ -245,7 +245,7 @@
 
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-        <button onclick="javascript:enviar()" type="button" class="btn btn-success">Guardar</button>
+        <button onclick="javascript:validar()" type="button" class="btn btn-success">Guardar</button>
       </form></div>
     </div>
   </div>
@@ -297,8 +297,12 @@
     $(".btn-agregar-producto").click(); 
     }
 });
-  $(function() 
-    {
+  $(function(){
+    //validacion de tipo de venta
+    $("#txt_venta").change(function(){
+      if($("#txt_venta").val() == 2){ $("#metodo-pago").hide(); }else{$("#metodo-pago").show();}
+    });
+
       $("#txt_producto").autocomplete({
         source: "buscar_art.php", 
         minLength: 3,     
@@ -315,8 +319,7 @@
 
     });
     
-    function registroSeleccionado(event, ui)
-    {
+    function registroSeleccionado(event, ui){
       let registro = ui.item.value;  
       let descrip = registro.descripcion;
       let porcion = descrip.split('|'); 
@@ -327,8 +330,7 @@
       event.preventDefault();
     }
     
-    function registroMarcado(event, ui)
-    {
+    function registroMarcado(event, ui){
       let registro = ui.item.value; 
       let descrip = registro.descripcion;
       let porcion = descrip.split('|'); 
@@ -337,8 +339,7 @@
       event.preventDefault();
     }
     
-    function Seleccionado(event, ui)
-    {
+    function Seleccionado(event, ui){
       let registro = ui.item.value;
       let descrip = registro.descripcion;
       let porcion = descrip.split('|');
@@ -347,8 +348,7 @@
       event.preventDefault();
     }
     
-    function Marcado(event, ui)
-    {
+    function Marcado(event, ui){
       let registro = ui.item.value; 
       let descrip = registro.descripcion;
       let porcion = descrip.split('|');
@@ -357,12 +357,9 @@
       event.preventDefault();
     }
 
-    function sepmiles(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    }
+    function sepmiles(x) { return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."); }
 
-    function vuelto()
-    { 
+    function vuelto(){ 
       let tot = $("#txt_tot").val();
       let ingresa = $("#txt_ingresa").val();
       let vuelto=sepmiles(ingresa-tot);
@@ -370,12 +367,25 @@
     } 
 
     function enviar(){
-    let vta = $("#txt_venta").val();
-    let plazo = $("#txt_plazo").val();
-    $("#tipovta").val(vta);
-    $("#plazo").val(plazo);
-    $("#formGuardar").submit()
-  } 
+      let vta = $("#txt_venta").val();
+      let plazo = $("#txt_plazo").val();
+      $("#tipovta").val(vta);
+      $("#plazo").val(plazo);
+      $("#formGuardar").submit()
+    }
+
+    function validar(){
+      if($("#txt_venta").val() == 2){
+        enviar();
+      }else{
+        let tot = parseInt($("#txt_tot").val());
+        let sum = parseInt($("#efectivo").val()) + parseInt($("#cheque").val()) + parseInt($("#tarjeta").val()) + parseInt($("#chequead").val()) + parseInt($("#giros").val()) + parseInt($("#depositoban").val());
+
+        if(sum > tot){ alert('El monto ingresado es mayor al importe total!'); }
+        else if(sum < tot){ alert('El monto ingresado es menor al importe total!');}
+        else{ enviar(); }
+      }
+    } 
     
   </script>
 
