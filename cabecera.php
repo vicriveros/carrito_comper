@@ -1,8 +1,5 @@
 <?php 
   session_start();
-  $caja=1;
-  $deposito=1;
-  $vend=1;
 ?>
 <!DOCTYPE html>
 <html>

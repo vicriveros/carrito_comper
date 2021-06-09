@@ -6,7 +6,7 @@ session_start();
 
 if ($_POST['usuario'] != ''){
   $cl=md5($_POST['clave']);
-  $sql="SELECT aliasnomb, idusu, idcaja, idvend, iddeposito FROM usuarios WHERE aliasnomb='".$_POST['usuario']."' and clave='".$cl."'";
+  $sql="SELECT aliasnomb, idusu, idcaja, idvend, iddeposito FROM usuarios WHERE btrim(aliasnomb)='".$_POST['usuario']."' and clave='".$cl."'";
   $consulta=pg_query($con, $sql)or die ("Problemas en consulta ".pg_last_error ());
   $cant=pg_num_rows($consulta);
   $dt=pg_fetch_array($consulta);
