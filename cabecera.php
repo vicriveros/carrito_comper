@@ -76,7 +76,7 @@
                   </div>
                   <div class="form-group">
                     <label>Plazo</label>
-                    <input id="txt_plazo" name="txt_plazo" type="number" class="form-control" value="0" placeholder="Ingrese cantidad">
+                    <input id="txt_plazo" name="txt_plazo" type="number" class="form-control" value="30" placeholder="Ingrese cantidad">
                   </div>
                 </div>
                 <!-- /.card-body -->
