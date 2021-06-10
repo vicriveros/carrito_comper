@@ -77,14 +77,24 @@ $sqlart="SELECT ultcosto FROM articulos WHERE idart=".$detalle["idart"];
 $datart = pg_query ($con, $sqlart) or die ("Problemas en $-campos ultcosto articulos:".pg_last_error ());
 $uc=pg_fetch_array($datart);
 
+/*trackart*/
+$sqlclie="SELECT nombres FROM clientes WHERE idclie=". $clie;
+$dataclie = pg_query ($con, $sqlclie) or die ("Problemas en $-campos clie:".pg_last_error ());
+$cl=pg_fetch_array($dataclie);
+
+$tnro =pg_query ($con, "SELECT max(idtrack) FROM trackart") or die ("Problemas en $-campos:".pg_last_error ());
+$tn=pg_fetch_array($tnro);
+$tnro= $tn[0]+1;
+
+$descrip = 'VENTA FACTURA Nº '.$nro.' CLIENTE: '.$cl[0];
+/*trackart*/
+
 foreach($_SESSION['detalle'] as $k => $detalle){
 	$tot_det=$detalle['cantidad']*$detalle['precio'];
 	$sqlinsertdet="INSERT INTO detventas (idventa, idart, cant, precio, falta, ivanum, idunidad, idunidad2, basimp, descu, cant2, prdesc, costo)
 	VALUES(".$idventa.", '".$detalle["idart"]."', ".$detalle["cantidad"].", ".$detalle["precio"].", '".$fecha."', '10', '0', '0', '100', '0', ".$detalle["cantidad"].", ".$detalle["precio"].", ".$uc["ultcosto"].")";
 
 	$insertdet = pg_query ($con, $sqlinsertdet) or die ("Problemas en detalle:".pg_last_error ());
-
-
 	
 	/*stock*/
 		$sqldep="SELECT cant FROM detstock WHERE idart=".$detalle["idart"]." and iddeposito=".$_SESSION['login_deposito'];
@@ -102,10 +112,16 @@ foreach($_SESSION['detalle'] as $k => $detalle){
 			$cantact=$cant - $detalle["cantidad"];
 			$sqlin="INSERT INTO detstock (idart, cant, iddeposito) VALUES (".$detalle["idart"].", ".$cantact.", ".$_SESSION['login_deposito'].")";
 			$insertstk = pg_query ($con, $sqlin) or die ("Problemas en $-campos deposito 3 stock:".pg_last_error ());
-
 		}
-
 	/*stock*/
+
+	/*trackart*/
+
+	$sqltrack = "INSERT INTO trackart (idtrack, idart, idtipo, idoc, ualta, stk, entrada, salida, saldo, descrip, falta, iddeposito, usuario) VALUES
+	 (".$tnro.", ".$detalle["idart"].", 2, ".$idventa.", ".$_SESSION['login_idusu'].", ".$cant.", 0, ".$detalle["cantidad"].", ".$cantact.", '".$descrip."', '".$fecha."', ".$_SESSION['login_deposito'].", ".$_SESSION['login_idusu'].")";
+	 $inserttrack = pg_query ($con, $sqltrack) or die ("Problemas en $-campos insert trackart:".pg_last_error ());
+	
+	/*trackart*/
 
 } /*fin de forech detalle*/
 
