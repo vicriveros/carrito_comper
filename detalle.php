@@ -18,11 +18,11 @@ include('_conexion.php');
                     if(count($_SESSION['detalle'])>0){
                       foreach($_SESSION['detalle'] as $k => $detalle){ ?>
                       <tr>
-                        <td><?php echo $detalle['codigo'];?></td>
-                        <td><?php echo $detalle['producto'];?></td>
-                        <td><?php echo $detalle['cantidad'];?></td>
-                        <td><?php echo number_format($detalle['precio'], 0, ',', '.');?></td>
-                        <td><?php echo number_format($detalle['total'], 0, ',', '.');?></td>
+                        <td style="text-align:right"><?php echo $detalle['codigo'];?></td>
+                        <td style="text-align:left"><?php echo $detalle['producto'];?></td>
+                        <td style="text-align:right"><?php echo $detalle['cantidad'];?></td>
+                        <td style="text-align:right"><?php echo number_format($detalle['precio'], 0, ',', '.');?></td>
+                        <td style="text-align:right"><?php echo number_format($detalle['total'], 0, ',', '.');?></td>
                         <td>
                           <button type="button" class="btn btn-sm btn-warning edit-art" data-toggle="modal" data-target="#editarModal<?php echo $detalle['idart'];?>" id="<?php echo $detalle['idart'];?>">Editar</button>
                           <button type="button" class="btn btn-sm btn-danger eliminar-producto" id="<?php echo $detalle['id'];?>">Eliminar</button>
