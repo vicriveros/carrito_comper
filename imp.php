@@ -64,7 +64,7 @@ function imprimir(){
     	<td colspan="3" style="text-align:center;">Telefono:021 207 167</td>
     </tr>
     <tr>
-    	<td colspan="3" style="text-align:center;">Fecha de Emision: <?php echo date("d-m-Y", strtotime($cb['falta']))?></td>
+    	<td colspan="3" style="text-align:center;">Fecha de Emision:  <br><?php echo date("d-m-Y", strtotime($cb['falta']))?></td>
     </tr>
     <tr>
     	<td colspan="3" style="text-align:center;">Factura <?php if ($cb['tipofac'] == 1) { echo "Contado";}else{ echo "Credito";} ?>
