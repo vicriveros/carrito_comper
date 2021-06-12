@@ -13,7 +13,7 @@ include('_conexion.php');
     	$nroini.='0';
 	}
 
-	$sql2="SELECT nrocaja, timbrado, validez, idsucursal FROM cajas WHERE idcaja=".$_SESSION['login_idcaja'];
+	$sql2="SELECT nrocaja, timbrado, validez, idsucursal, inicio FROM cajas WHERE idcaja=".$_SESSION['login_idcaja'];
 	$cons2=pg_query($con, $sql2)or die ("Problemas en consulta ".pg_last_error ());
 	$nca=pg_fetch_array($cons2);
 
@@ -52,7 +52,13 @@ function imprimir(){
     	<td colspan="3" style="text-align:center;">Ruc:80091477-5</td>
     </tr>
     <tr>
-    	<td colspan="3" style="text-align:center;">Timbrado:<?php echo $nca['timbrado'] ?> - VTO:<?php echo date("d-m-Y", strtotime($nca['validez'])) ?></td>
+    	<td colspan="3" style="text-align:center;">Timbrado:<?php echo $nca['timbrado'] ?></td>
+    </tr>
+    <tr>
+    	<td colspan="3" style="text-align:center;">Inicio:<?php echo date("d-m-Y", strtotime($nca['inicio'])) ?></td>
+    </tr>
+    <tr>
+    	<td colspan="3" style="text-align:center;">Vencimiento:<?php echo date("d-m-Y", strtotime($nca['validez'])) ?></td>
     </tr>
     <tr>
     	<td colspan="3" style="text-align:center;">Telefono:021 207 167</td>

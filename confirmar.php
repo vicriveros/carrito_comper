@@ -82,9 +82,9 @@ $sqlclie="SELECT nombres FROM clientes WHERE idclie=". $clie;
 $dataclie = pg_query ($con, $sqlclie) or die ("Problemas en $-campos clie:".pg_last_error ());
 $cl=pg_fetch_array($dataclie);
 
-$tnro =pg_query ($con, "SELECT max(idtrack) FROM trackart") or die ("Problemas en $-campos:".pg_last_error ());
+/*$tnro =pg_query ($con, "SELECT max(idtrack) FROM trackart") or die ("Problemas en $-campos:".pg_last_error ());
 $tn=pg_fetch_array($tnro);
-$tnro= $tn[0]+1;
+$tnro= $tn[0]+1;*/
 
 $descrip = 'VENTA FACTURA Nº '.$nro.' CLIENTE: '.$cl[0];
 /*trackart*/
@@ -116,7 +116,10 @@ foreach($_SESSION['detalle'] as $k => $detalle){
 	/*stock*/
 
 	/*trackart*/
-
+	$tnro =pg_query ($con, "SELECT max(idtrack) FROM trackart") or die ("Problemas en $-campos:".pg_last_error ());
+	$tn=pg_fetch_array($tnro);
+	$tnro= $tn[0]+1;
+	
 	$sqltrack = "INSERT INTO trackart (idtrack, idart, idtipo, idoc, ualta, stk, entrada, salida, saldo, descrip, falta, iddeposito, usuario) VALUES
 	 (".$tnro.", ".$detalle["idart"].", 2, ".$idventa.", ".$_SESSION['login_idusu'].", ".$cant.", 0, ".$detalle["cantidad"].", ".$cantact.", '".$descrip."', '".$fecha."', ".$_SESSION['login_deposito'].", ".$_SESSION['login_idusu'].")";
 	 $inserttrack = pg_query ($con, $sqltrack) or die ("Problemas en $-campos insert trackart:".pg_last_error ());
