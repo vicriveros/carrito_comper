@@ -10,8 +10,8 @@ $contador = 0;
 $resul='[';
 while($dt=pg_fetch_array($datos)){
 	if ($contador > 0) {$resul.= ", ";}
-	$des=$dt['nombres'].'|'.$dt['ruc'];
-	$resul.='{ "label" : "'.$dt['nombres'].' | '.$dt['barrio'].'  | '.$dt['ruc'].'", "value" : { "id" : '.$dt['idclie'].', "descripcion" : "'.$des.'" } }';
+	$des=trim($dt['nombres']).'|'.trim($dt['barrio']).'|'.trim($dt['ruc']);
+	$resul.='{ "label" : "'.trim($dt['nombres']).' | '.trim($dt['barrio']).'  | '.trim($dt['ruc']).'", "value" : { "id" : '.$dt['idclie'].', "descripcion" : "'.$des.'" } }';
 	
 	$contador++;
 	

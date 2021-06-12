@@ -319,9 +319,10 @@
     function registroSeleccionado(event, ui){
       let registro = ui.item.value;  
       let descrip = registro.descripcion;
-      let porcion = descrip.split('|'); 
+      let porcion = descrip.split('|');
+      let mostrar =  porcion[0]+' | '+porcion[1]+' | '+porcion[2];
       $("#txt_idclie").val(registro.id);
-      $("#txt_cliente").val(porcion[0]);
+      $("#txt_cliente").val(mostrar);
       $("#txt_nombre").val(porcion[0]);
       $("#txt_ruc").val(porcion[1]);
       event.preventDefault();
