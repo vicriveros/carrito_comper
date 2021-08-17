@@ -13,7 +13,7 @@ if ($_POST['usuario'] != ''){
   
     if ($cant > 0)
     {
-      $sql2="SELECT nrocaja, idsucursal, timb, timbrado FROM cajas WHERE idcaja=".$dt['idcaja'];
+      $sql2="SELECT a.nrocaja, a.idsucursal, a.timb, b.nro_timbrado as timbrado FROM cajas a inner join timbrados b on a.idcaja=b.idcaja WHERE b.idcaja=".$dt['idcaja'].' and b.activo=1 and b.tipo_doc=1';
       $cons2=pg_query($con, $sql2)or die ("Problemas en consulta ".pg_last_error ());
       $nca=pg_fetch_array($cons2);
 
@@ -89,8 +89,6 @@ if ($_POST['usuario'] != ''){
           </div>
         </div>
         
-      
-
       <div class="social-auth-links text-center mb-3">
         <button id="enviar" type="submit" class="btn btn-block btn-primary">Acceder</button>  
       </div>

@@ -1,0 +1,420 @@
+body{
+	font-size: 15px;
+	font-family: Sans-serif;
+}
+
+/**************************************************
+**********  CONTAINER WIDTH / ANCHO DE HOJA *******
+***************************************************/
+
+.w-hoja{
+	width: 220px;
+	background: #ddd;
+
+}
+
+/******************************************************************************
+*********************************   FONDOS ************************************
+*******************************************************************************/
+
+.bg-r{
+	background-color: yellow;
+}
+
+
+.bg-g{
+	background-color: green;
+}
+
+
+.bg-b{
+	background-color: blue;
+}
+
+
+.celda-25{
+	float: left;
+	width: 25px;
+}
+
+
+.extra{
+left:220px;
+top: 35px;
+position:fixed;
+z-index: 1;
+}
+
+
+.numero-factura-arriba{
+left:880px;
+top: 80px;
+width: 100px;
+position:fixed;
+z-index: 1;
+}
+
+
+
+.marcador{
+	float: left;
+	width: 100px;
+	height: 15px;
+	margin: 0 0 0 60px;
+	background-color: green;
+}
+
+
+
+.divisor-1{
+	float: left;
+	width: 900px;
+	height: 15px;
+	margin: 0px 0 10px 0px;
+	background-color: green;
+}
+
+/******************************************************************************
+********************************   CABECERA  **********************************
+*******************************************************************************/
+
+
+.linea-I{
+	margin-top: 134px;
+	margin-bottom: 0px;
+	font-size: 15px;
+}
+
+
+.linea-I-2{
+	margin-top: 49px;
+	margin-bottom: 0px;
+	font-size: 15px;
+}
+
+.linea-I-3{
+	margin-top: 53px;
+	margin-bottom: 0px;
+	font-size: 15px;
+}
+/****************** L1 ******************/
+
+.fecha-factura{
+	float: left;
+	width: 425px;
+	margin: 0 0 10 100px;
+	background-color: yellow;
+}
+
+/****************** L2 ******************/
+.linea-II{
+	margin-top: 0px;
+	margin-bottom: 0px;
+	font-size: 15px;
+}
+
+.razon-social{
+	float: left;
+	width: 500px;
+	margin: 0 0 15 120px;
+	text-align: center;
+	background-color: yellow;
+}
+
+/****************** L3 ******************/
+.linea-III{
+	margin-top: 0px;
+	margin-bottom: 0px;
+	/*background-color: green;*/
+	font-size: 15px;
+}
+
+.direccion{
+	float: left;
+	width: 310px;
+	margin: 0 0 10 150px;
+	background-color: yellow;
+}
+
+
+.remision{
+	float: left;
+	width: 100px;
+	margin: 0 0 10 490px;
+	background-color: yellow;
+}
+
+.telefono{
+	float: left;
+	width: 100px;
+	margin: 0 0 10 281px;
+	background-color: yellow;
+}
+
+/****************** L4 ******************/
+.linea-IV{
+	margin-top: 0px;
+	margin-bottom: 0px;
+	font-size: 15px;
+}
+
+.ruc{
+	float: left;
+	width: 100px;
+	margin: 0 0 10 80px;
+	background-color: yellow;
+}
+
+
+
+.remision-fecha{
+	float: left;
+	width: 150px;
+	margin: 0 0 10 230px;
+	background-color: yellow;
+}
+
+/****************** CONDITION ******************/
+.linea-CONDITION{
+	margin-top: 20px;
+	margin-bottom: 75px;
+	font-size: 15px;
+}
+.cond-contado{
+	float: left;
+	width: 100px;
+	margin: 0 0 0 10px;
+	background-color: yellow;
+	font-size: 13px;
+}
+
+.contenedor{
+	float: left;
+	width: 1500px;
+	margin: 0 0 0 10px;
+	background-color: yellow;
+	font-size: 13px;
+}
+.cond-cyellowito{
+	float: left;
+	width: 20px;
+	margin: 0 0 0 50px;
+	background-color: yellow;
+}
+
+.vencimiento-factura{
+	float: left;
+	width: 150px;
+	margin: 0 0 10 169px;
+	background-color: yellow;
+}
+
+
+
+
+/******************************************************************************
+********************************   ARTICULOS   ********************************
+*******************************************************************************/
+
+.alto{
+height: 663px;
+}
+
+/****************** L5  ******************/
+
+
+.linea-V{
+
+	margin-top: 0px;
+	margin-bottom: 0px;
+	font-size: 15px;
+}
+
+
+.unidad{
+	float: left;
+	width: 80px;
+	margin: 0 0 0 5px;
+	background-color: yellow;
+	font-size: 15px;
+}
+
+.fracc{
+	float: left;
+	width: 40px;
+	margin: 0 0 0 13px;
+	background-color: yellow;
+	font-size: 15px;
+}
+
+.descripcion{
+	float: left;
+	width: 350px;
+	margin: 0 0 0 3px;
+	background-color: yellow;
+}
+
+
+
+.precio-unitario{
+	float: left;
+	width: 75px;
+	margin: 0 0 0 5px;
+	background-color: yellow;
+	font-size: 15px;
+}
+
+.exenta{
+	float: left;
+	width: 75px;
+	margin: 0 0 0 30px;
+	background-color: yellow;
+	font-size: 15px;
+}
+
+.iva-5{
+	float: left;
+	width: 80px;
+	margin: 0 0 0 15px;
+	background-color: yellow;
+	font-size: 15px;
+}
+
+
+.iva-10{
+	float: left;
+	width: 90px;
+	margin: 0 0 0 25px;
+	background-color: yellow;
+	font-size: 15px;
+}
+
+
+
+/******************************************************************************
+********************************   SUBTOTALES   *******************************
+*******************************************************************************/
+
+
+
+/****************** L6 ******************/
+
+.linea-VI{
+
+	margin-top: 0px;
+	margin-bottom: 0px;
+	font-size: 15px;
+}
+
+.sub-totales-precio-unitario{
+	float: left;
+	width: 75px;
+	margin: 0 0 0 460px;
+	background-color: yellow;
+}
+
+.sub-totales-exenta{
+	float: left;
+	width: 75px;
+	margin: 0 0 0 15px;
+	background-color: yellow;
+}
+
+.sub-totales-iva-5{
+	float: left;
+	width: 75px;
+	margin: 0 0 0 15px;
+	background-color: yellow;
+}
+
+
+.sub-totales-iva-10{
+	float: left;
+	width: 75px;
+	margin: 0 0 0 20px;
+	background-color: yellow;
+}
+
+
+
+
+/****************** L7 ******************/
+
+.linea-VII{
+
+	margin-top: 3px;
+	margin-bottom: 15px;
+	font-size: 16px;
+	
+}
+
+.total-a-pagar-letras{
+	float: left;
+	width: 635px;
+	margin: 0px 0 15 70px;
+	background-color: yellow;
+	font-size: 14px;
+}
+
+.total-a-pagar-numeros{
+	float: left;
+	width: 100px;
+	margin: 0px 0 0 20px;
+	background-color: yellow;
+}
+
+
+
+
+/****************** L8 ******************/
+
+.linea-VIII{
+
+	margin-top: 5px;
+	margin-bottom: 0px;
+	font-size: 16px;
+	
+}
+
+.liquidacion-iva-5{
+	float: left;
+	width: 75px;
+	margin: 0 0 0 190px;
+	background-color: yellow;
+}
+
+
+.liquidacion-iva-10{
+	float: left;
+	width: 75px;
+	margin: 0 0 0 170px;
+	background-color: yellow;
+}
+
+
+.liquidacion-total{
+	float: left;
+	width: 75px;
+	margin: 0 0 0 233px;
+	background-color: yellow;
+	font-size: 16px;
+}
+
+
+/****************** L9 ******************/
+
+.linea-IX{
+
+	margin-top: 15px;
+	margin-bottom: 0px;
+	font-size: 15px;
+	
+}
+
+.observacion{
+	float: left;
+	width: 275px;
+	height: 35px;
+	margin: 0 0 0 650px;
+	background-color: yellow;
+}

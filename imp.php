@@ -13,7 +13,7 @@ include('_conexion.php');
     	$nroini.='0';
 	}
 
-	$sql2="SELECT nrocaja, timbrado, validez, idsucursal, inicio FROM cajas WHERE idcaja=".$_SESSION['login_idcaja'];
+	$sql2="SELECT a.nrocaja, b.nro_timbrado as timbrado, b.fecini as inicio, b.fecven as validez, a.idsucursal FROM cajas a inner join timbrados b on a.idcaja=b.idcaja WHERE b.idcaja=".$_SESSION['login_idcaja'].' and b.activo=1 and b.tipo_doc=1';
 	$cons2=pg_query($con, $sql2)or die ("Problemas en consulta ".pg_last_error ());
 	$nca=pg_fetch_array($cons2);
 
@@ -39,41 +39,47 @@ function imprimir(){
 }
 </SCRIPT>
 </HEAD>
-<BODY onLoad="imprimir();">
+<body onLoad="imprimir();">
 <div id="con_gral" style="font-size:10px; font-family:Arial;  ">
-<table width="288px">
+<table width="215x">
 	<tr>
-    	<td colspan="3" style="text-align:center;">4B S.A.</td>
+    	<td colspan="4" style="text-align:center;">COMPER</td>
+    </tr>
+	<tr>
+    	<td colspan="4" style="text-align:center;">de Victor G. Perez Velázquez </td>
+    </tr>
+	<tr>
+    	<td colspan="4" style="text-align:center; font-size=8px">Comercio al por menor de otros productos en comercio no especializados </td>
     </tr>
     <tr>
-    	<td colspan="3" style="text-align:center;">Ruta Gral. Aquino N°3, Km 22.5 - Abasto Norte, Bloque C1, Local 09 </td>
+    	<td colspan="4" style="text-align:center;">C.Matriz: Julia Miranda Cueto e/ Ayala Candia - Fndo. de la Mora</td>
     </tr>
     <tr>
-    	<td colspan="3" style="text-align:center;">Ruc:80091477-5</td>
+    	<td colspan="4" style="text-align:center;">Tel.: 0982 185 359 - 0984 289 831 - 0981 180 469</td>
     </tr>
     <tr>
-    	<td colspan="3" style="text-align:center;">Timbrado:<?php echo $nca['timbrado'] ?></td>
+    	<td colspan="4" style="text-align:center;">RUC: 2238812-5</td>
     </tr>
     <tr>
-    	<td colspan="3" style="text-align:center;">Inicio:<?php echo date("d-m-Y", strtotime($nca['inicio'])) ?></td>
+    	<td colspan="4" style="text-align:center;">Timbrado:<?php echo $nca['timbrado'] ?></td>
     </tr>
     <tr>
-    	<td colspan="3" style="text-align:center;">Vencimiento:<?php echo date("d-m-Y", strtotime($nca['validez'])) ?></td>
+    	<td colspan="4" style="text-align:center;">Inicio:<?php echo date("d-m-Y", strtotime($nca['inicio'])) ?></td>
     </tr>
     <tr>
-    	<td colspan="3" style="text-align:center;">Telefono:021 207 167</td>
+    	<td colspan="4" style="text-align:center;">Vencimiento:<?php echo date("d-m-Y", strtotime($nca['validez'])) ?></td>
     </tr>
     <tr>
-    	<td colspan="3" style="text-align:center;">Fecha de Emision:  <br><?php echo date("d-m-Y", strtotime($cb['falta']))?></td>
+    	<td colspan="4" style="text-align:center;">Fecha de Emision:  <br><?php echo date("d-m-Y", strtotime($cb['falta']))?></td>
     </tr>
     <tr>
-    	<td colspan="3" style="text-align:center;">Factura <?php if ($cb['tipofac'] == 1) { echo "Contado";}else{ echo "Credito";} ?>
+    	<td colspan="4" style="text-align:center;">Factura <?php if ($cb['tipofac'] == 1) { echo "Contado";}else{ echo "Credito";} ?>
             
           N°:</br> <?php echo $suc[0] ?>-<?php echo $nca[0] ?>-<?php echo $nroini.$cb["nro"] ?></td>
     </tr>
 
 	<tr>
-    	<td colspan="3" style="text-align:center; height:26px;">-- Detalle --</td>
+    	<td colspan="4" style="text-align:center; height:26px;">-- Detalle --</td>
     </tr>
 
 	<tr>
@@ -103,7 +109,11 @@ $tot=0;
 ?>
 	<tr>
     	<td width="38"><?php echo number_format($dt['cant'], 0, ',', '.'); ?></td>
-    	<td width="176"><?php echo $art; ?></td>
+    	<td colspan="3" width="400"><?php echo $art; ?></td>
+	</tr>
+	<tr>
+		<td width="38"></td>
+		<td width="38"></td>
     	<td width="38"><?php echo number_format($dt['precio'], 0, ',', '.'); ?></td>
     	<td width="38"><?php echo number_format($tot1, 0, ',', '.'); ?></td>
     </tr>
@@ -113,42 +123,42 @@ $tot=0;
 $totiva=$cb['iva10']+$cb['iva5'];
  ?> 
 	<tr>
-    	<td colspan="3" width="176" style="text-align:left; font-size:22px; font-family:Arial;"><strong>Total:</strong> <?php echo  number_format($tot, 0, ',', '.') ?></td>
+    	<td colspan="4" width="176" style="text-align:left; font-size:22px; font-family:Arial;"><strong>Total:</strong> <?php echo  number_format($tot, 0, ',', '.') ?></td>
     </tr>
 
  	<tr>
-    	<td colspan="3" style="text-align:left; height:26px;">&nbsp;</td>
+    	<td colspan="4" style="text-align:left; height:26px;">&nbsp;</td>
     </tr>
 	<tr>
-    	<th colspan="3" style="text-align:left; height:26px;"><strong>-- Datos del Cliente--</th>
+    	<th colspan="4" style="text-align:left; height:26px;"><strong>-- Datos del Cliente--</th>
     </tr>
 	<tr>
-    	<td colspan="3" style="text-align:left; height:26px;">Razon Social: <?php echo $cl['nombres'] ?></td>
+    	<td colspan="4" style="text-align:left; height:26px;">Razon Social: <?php echo $cl['nombres'] ?></td>
     </tr>
 	<tr>
-    	<td colspan="3" style="text-align:left; height:26px;">RUC/CI: <?php echo $cl['ruc'] ?></td>
+    	<td colspan="4" style="text-align:left; height:26px;">RUC/CI: <?php echo $cl['ruc'] ?></td>
     </tr>
   
 	<tr>
-    	<td colspan="3" style="text-align:left; height:26px;"><strong>-- Liquidacion de IVA --</td>
+    	<td colspan="4" style="text-align:left; height:26px;"><strong>-- Liquidacion de IVA --</td>
     </tr>
 	<tr>
-    	<td colspan="3" style="text-align:left; height:26px;">Exenta: 0</td>
+    	<td colspan="4" style="text-align:left; height:26px;">Exenta: 0</td>
     </tr>
 	<tr>
-    	<td colspan="3" style="text-align:left; height:26px;">10%:<?php echo round($cb['iva10']); ?></td>
+    	<td colspan="4" style="text-align:left; height:26px;">10%:<?php echo round($cb['iva10']); ?></td>
     </tr>
 	<tr>
-    	<td colspan="3" style="text-align:left; height:26px;">5%:<?php echo round($cb['iva5']); ?></td>
+    	<td colspan="4" style="text-align:left; height:26px;">5%:<?php echo round($cb['iva5']); ?></td>
     </tr>
 	<tr>
-    	<td colspan="3" style="text-align:left; height:26px;"><strong>Total:<?php echo round($totiva); ?></td>
+    	<td colspan="4" style="text-align:left; height:26px;"><strong>Total:<?php echo round($totiva); ?></td>
     </tr>
  	<tr>
-    	<td colspan="3" style="text-align:left; height:26px;">&nbsp;</td>
+    	<td colspan="4" style="text-align:left; height:26px;">&nbsp;</td>
     </tr>
  	<tr>
-    	<td colspan="3" style="text-align:center; height:26px;">*Gracias por su preferencia*</td>
+    	<td colspan="4" style="text-align:center; height:26px;">*Gracias por su preferencia*</td>
     </tr>
 
 
@@ -160,5 +170,5 @@ $totiva=$cb['iva10']+$cb['iva5'];
 function redireccionarPagina() {
 	window.location = "cabecera.php";
 }
-setTimeout("redireccionarPagina()", 800);
+//setTimeout("redireccionarPagina()", 800);
 </script>
