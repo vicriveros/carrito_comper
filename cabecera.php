@@ -1,6 +1,14 @@
 <?php 
+  include('_conexion.php');
   session_start();
+  if ($_GET['clie_id']) {
+    $sqlcp="SELECT nombres, ruc, telefono, direccion, barrio FROM clientes WHERE idclie= ".$_GET['clie_id'];
+    $datoscp = pg_query ($con, $sqlcp) or die ("Problemas en $-campos: 3 ".pg_last_error ());
+    $dtcp=pg_fetch_array($datoscp);
+
+  }
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -63,10 +71,17 @@
               <!-- form start -->
               
                 <div class="card-body">
-                  <div class="form-group">
-                    <label>Cliente</label>
-                    <input id="txt_cliente" name="txt_cliente" type="text" class="form-control" placeholder="Ingresar Cliente...">
+                  
+                  <div class="form-group form-row">
+                    <div class="col-md-8">
+                      <label>Cliente</label>
+                      <input id="txt_cliente" name="txt_cliente" type="text" class="form-control" placeholder="Ingresar Cliente...">
+                    </div>  
+                    <div class="col-md-4 text-center mt-1">
+                      <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#myModalCliente"> Registrar / Actualizar Cliente </button>
+                    </div>
                   </div>
+
                   <div class="form-group">
                     <label>Tipo Venta</label>
                     <select id="txt_venta" name="txt_venta" class="form-control">
@@ -247,6 +262,41 @@
     </div>
   </div>
 </div><!-- </ COBRAR -->
+
+<!-- REGISTRAR CLIENTE -->
+<div class="modal fade" id="myModalCliente" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">REGISTRAR / ACTUALIZAR CLIENTE</h4>
+      </div>
+
+      <div class="modal-body">
+         <form name="form_clie" id="form_clie" method="post" action="guardar_clie.php">
+          <div class="form-group">
+            <label for="recipient-name" class="control-label">Nombre:</label>
+            <input type="text" class="form-control" id="nombre" name="nombre" >
+            <label for="recipient-name" class="control-label">Ruc:</label>
+            <input type="text" class="form-control" id="ruc" name="ruc" >
+            <label for="recipient-name" class="control-label">Teléfono:</label>
+            <input type="text" class="form-control" id="telefono" name="telefono" >
+            <label for="recipient-name" class="control-label">Dirección:</label>
+            <input type="text" class="form-control" id="direccion" name="direccion" >
+            
+          </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        <button id="enviar" type="submit" class="btn btn-success">Guardar</button>
+      </form>
+      </div>
+    </div>
+  </div>
+</div><!-- </ REGISTRAR CLIENTE -->
+
       </div><!-- /.container-fluid -->
     </section>
     <!-- /.content -->
@@ -256,7 +306,7 @@
     <div class="float-right d-none d-sm-block">
       
     </div>
-    <strong>Copyright &copy; 2020 <a href="#">Proyectos - e</a>.</strong> 
+    <strong>Copyright &copy; 2021 <a href="#">Proyectos - e</a>.</strong> 
   </footer>
 
   <!-- Control Sidebar -->
@@ -287,6 +337,26 @@
     <link rel="stylesheet" href="libs/js/alertify/themes/alertify.core.css" />
   <link rel="stylesheet" href="libs/js/alertify/themes/alertify.bootstrap.css" id="toggleCSS" />
     <script src="libs/js/alertify/lib/alertify.min.js"></script>
+
+<?php 
+if ($_GET['clie_id']) {
+  echo'
+  <script>
+    $(document).ready(function(){ 
+      $("#txt_idclie").val( "'.$_GET['clie_id'].'" );
+      $("#txt_cliente").val("'.$dtcp[nombres].' | '.$dtcp[barrio].' | '.$dtcp[ruc].'");
+      $("#txt_nombre").val("'.$dtcp[nombres].'");
+      $("#txt_ruc").val("'.$dtcp[ruc].'");
+
+      $("#nombre").val("'.$dtcp[nombres].'");
+      $("#ruc").val("'.$dtcp[ruc].'");
+      $("#direccion").val("'.$dtcp[direccion].'");
+      $("#telefono").val("'.$dtcp[telefono].'");
+    });
+  </script>
+  ';
+}
+?>
 
 <script type="text/javascript">
  $("#txt_producto").keydown(function(tecla){
@@ -325,6 +395,11 @@
       $("#txt_cliente").val(mostrar);
       $("#txt_nombre").val(porcion[0]);
       $("#txt_ruc").val(porcion[1]);
+
+      $("#nombre").val(porcion[0]);
+      $("#ruc").val(porcion[2]);
+      $("#direccion").val(porcion[3]);
+      $("#telefono").val(porcion[4]);
       event.preventDefault();
     }
     
