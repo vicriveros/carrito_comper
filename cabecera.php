@@ -2,7 +2,7 @@
   include('_conexion.php');
   session_start();
   if ($_GET['clie_id']) {
-    $sqlcp="SELECT nombres, ruc, telefono, direccion, barrio FROM clientes WHERE idclie= ".$_GET['clie_id'];
+    $sqlcp="SELECT nombres, ruc, telefono, direccion, barrio, ubicacion FROM clientes WHERE idclie= ".$_GET['clie_id'];
     $datoscp = pg_query ($con, $sqlcp) or die ("Problemas en $-campos: 3 ".pg_last_error ());
     $dtcp=pg_fetch_array($datoscp);
 
@@ -275,15 +275,19 @@
       <div class="modal-body">
          <form name="form_clie" id="form_clie" method="post" action="guardar_clie.php">
           <div class="form-group">
-            <label for="recipient-name" class="control-label">Nombre:</label>
+            <label for="recipient-name" class="control-label">Razon Social:</label>
             <input type="text" class="form-control" id="nombre" name="nombre" >
             <label for="recipient-name" class="control-label">Ruc:</label>
             <input type="text" class="form-control" id="ruc" name="ruc" >
+            <label for="recipient-name" class="control-label">Nombre:</label>
+            <input type="text" class="form-control" id="barrio" name="barrio" >
             <label for="recipient-name" class="control-label">Teléfono:</label>
             <input type="text" class="form-control" id="telefono" name="telefono" >
             <label for="recipient-name" class="control-label">Dirección:</label>
             <input type="text" class="form-control" id="direccion" name="direccion" >
-            
+            <label for="recipient-name" class="control-label">Ubicación:</label> </br>
+            <a onclick="javascript:geo()" class="btn btn-info mb-1">Capturar Ubicación</a>
+            <input type="text" class="form-control" id="ubicacion" name="ubicacion" >
           </div>
 
       </div>
@@ -352,6 +356,8 @@ if ($_GET['clie_id']) {
       $("#ruc").val("'.$dtcp[ruc].'");
       $("#direccion").val("'.$dtcp[direccion].'");
       $("#telefono").val("'.$dtcp[telefono].'");
+      $("#ubicacion").val("'.$dtcp[ubicacion].'");
+      $("#barrio").val("'.$dtcp[barrio].'");
     });
   </script>
   ';
@@ -397,9 +403,11 @@ if ($_GET['clie_id']) {
       $("#txt_ruc").val(porcion[1]);
 
       $("#nombre").val(porcion[0]);
+      $("#barrio").val(porcion[1]);
       $("#ruc").val(porcion[2]);
       $("#direccion").val(porcion[3]);
       $("#telefono").val(porcion[4]);
+      $("#ubicacion").val(porcion[5]);
       event.preventDefault();
     }
     
@@ -460,6 +468,44 @@ if ($_GET['clie_id']) {
       }
     } 
     
+  function geo(){
+	var content = document.getElementById("geotest");
+
+	if (navigator.geolocation)
+	{
+		navigator.geolocation.getCurrentPosition(function(objPosition)
+		{
+			let lon = objPosition.coords.longitude;
+			let lat = objPosition.coords.latitude;
+      let ubi = lat +', ' + lon;
+      $("#ubicacion").val(ubi);
+
+		}, function(objPositionError)
+		{
+			switch (objPositionError.code)
+			{
+				case objPositionError.PERMISSION_DENIED:
+          $("#ubicacion").val("No se ha permitido el acceso a la posición del usuario.");
+				break;
+				case objPositionError.POSITION_UNAVAILABLE:
+          $("#ubicacion").val("No se ha podido acceder a la información de su posición.");
+				break;
+				case objPositionError.TIMEOUT:
+					$("#ubicacion").val("El servicio ha tardado demasiado tiempo en responder.");
+				break;
+				default:
+        $("#ubicacion").val("Error desconocido.");
+			}
+		}, {
+			maximumAge: 75000,
+			timeout: 15000
+		});
+	}
+	else
+	{
+    $("#ubicacion").val("Su navegador no soporta la API de geolocalización.");
+	}
+};
   </script>
 
 </body>

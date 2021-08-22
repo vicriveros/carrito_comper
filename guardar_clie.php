@@ -6,6 +6,8 @@ include('_conexion.php');
       $ruc=$_POST['ruc'];
       $tel=$_POST['telefono'];
       $direc=$_POST['direccion'];
+      $barrio=$_POST['barrio'];
+      $ubicacion=$_POST['ubicacion'];
     
      $sql1="select idclie from clientes where ruc like '".$ruc."%'";
      $datos1 = pg_query ($con, $sql1) or die ("Problemas en select:".pg_last_error ());
@@ -17,6 +19,8 @@ include('_conexion.php');
         $sql="update clientes set nombres='".$nombre."',
          ruc='".$ruc."',
          telefono='".$tel."',
+         barrio='".$barrio."',
+         ubicacion='".$ubicacion."',
          direccion='".$direc."'
          where idclie=".$dt['idclie'];
         $datos = pg_query ($con, $sql) or die ("Problemas en $-campos:".pg_last_error ());
@@ -28,8 +32,8 @@ include('_conexion.php');
     $uid= pg_fetch_array($ult);
     $nextid= $uid[0]+1;
 
-    $sql="insert into clientes (idclie, nombres, ruc, telefono, direccion)
-        values ('".$nextid."', '".$nombre."', '".$ruc."', '".$tel."', '".$direc."')";
+    $sql="insert into clientes (idclie, nombres, ruc, telefono, direccion, barrio, ubicacion)
+        values ('".$nextid."', '".$nombre."', '".$ruc."', '".$tel."', '".$direc."', '".$barrio."', '".$ubicacion."')";
     $datos = pg_query ($con, $sql) or die ("Problemas en $-campos:".pg_last_error ());
  
     } //registrar cliente
