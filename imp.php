@@ -41,39 +41,39 @@ function imprimir(){
 </HEAD>
 <body onLoad="imprimir();">
 <div id="con_gral" style="font-size:10px; font-family:Arial;  ">
-<table width="260x">
+<table width="100%">
 	<tr>
     	<td colspan="4" style="text-align:center;">COMPER</td>
     </tr>
 	<tr>
-    	<td colspan="4" style="text-align:center;">de Victor G. Perez Velázquez </td>
+    	<td colspan="4" style="font-size:9px; text-align:center;">de Victor G. Perez Velázquez </td>
     </tr>
 	<tr>
-    	<td colspan="4" style="text-align:center; font-size=8px">Comercio al por menor de otros productos en comercio no especializados </td>
+    	<td colspan="4" style="font-size:9px; text-align:center; ">Comercio al por menor de otros productos en comercio no especializados </td>
     </tr>
     <tr>
-    	<td colspan="4" style="text-align:center;">C.Matriz: Julia Miranda Cueto e/ Ayala Candia - Fndo. de la Mora</td>
+    	<td colspan="5" style="font-size:9px; text-align:center;">C.Matriz: Julia Miranda Cueto e/ Ayala Candia - Fndo. de la Mora</td>
     </tr>
     <tr>
-    	<td colspan="4" style="text-align:center;">Tel.: 0982 185 359 - 0984 289 831 - 0981 180 469</td>
+    	<td colspan="4" style="font-size:9px; text-align:center;">Tel.: 0982 185 359 - 0984 289 831 - 0981 180 469</td>
     </tr>
     <tr>
-    	<td colspan="4" style="text-align:center;">RUC: 2238812-5</td>
+    	<td colspan="4" style="font-size:9px; text-align:center;">RUC: 2238812-5</td>
     </tr>
     <tr>
-    	<td colspan="4" style="text-align:center;">Timbrado:<?php echo $nca['timbrado'] ?></td>
+    	<td colspan="4" style="font-size:9px; text-align:center;">Timbrado:<?php echo $nca['timbrado'] ?></td>
     </tr>
     <tr>
-    	<td colspan="4" style="text-align:center;">Inicio:<?php echo date("d-m-Y", strtotime($nca['inicio'])) ?></td>
+    	<td colspan="4" style="font-size:9px; text-align:center;">Inicio:<?php echo date("d-m-Y", strtotime($nca['inicio'])) ?> Vencimiento:<?php echo date("d-m-Y", strtotime($nca['validez'])) ?></td>
+    <!-- </tr>
+    <tr>
+    	<td colspan="4" style="font-size:9px; text-align:center;">Vencimiento:<?php echo date("d-m-Y", strtotime($nca['validez'])) ?></td>
+    </tr> -->
+    <tr>
+    	<td colspan="4" style="font-size:9px; text-align:center;">Fecha de Emision: <?php echo date("d-m-Y", strtotime($cb['falta']))?></td>
     </tr>
     <tr>
-    	<td colspan="4" style="text-align:center;">Vencimiento:<?php echo date("d-m-Y", strtotime($nca['validez'])) ?></td>
-    </tr>
-    <tr>
-    	<td colspan="4" style="text-align:center;">Fecha de Emision:  <br><?php echo date("d-m-Y", strtotime($cb['falta']))?></td>
-    </tr>
-    <tr>
-    	<td colspan="4" style="text-align:center;">Factura <?php if ($cb['tipofac'] == 1) { echo "Contado";}else{ echo "Credito";} ?>
+    	<td colspan="4" style="font-size:9px; text-align:center;">Factura <?php if ($cb['tipofac'] == 1) { echo "Contado";}else{ echo "Credito";} ?>
             
           N°:<?php echo $suc[0] ?>-<?php echo $nca[0] ?>-<?php echo $nroini.$cb["nro"] ?></td>
     </tr>
@@ -89,8 +89,8 @@ function imprimir(){
     	<th width="176">Precio</th>
     	<th width="176">Total</th>
     </tr>
-<?php 
-$tot=0;
+	<?php 
+	$tot=0;
 	$sqldet="SELECT idart, cant, (precio*1.1) as precio FROM detventas WHERE idventa=".$_GET['identificador'];
 	$det = pg_query ($con, $sqldet) or die ("Problemas en $-campos detalle1:".pg_last_error ());
 	
@@ -103,7 +103,7 @@ $tot=0;
 
 	$tot1=$dt['cant']*$dt['precio'];
 	$tot=$tot+$tot1;
-?>
+	?>
 	<tr>
     	<td width="38"><?php echo number_format($dt['cant'], 0, ',', '.'); ?></td>
     	<td colspan="3" width="400"><?php echo $art; ?></td>
@@ -117,7 +117,7 @@ $tot=0;
     
  <?php 
  }
-$totiva=$cb['iva10']+$cb['iva5'];
+	$totiva=$cb['iva10']+$cb['iva5'];
  ?> 
 	<tr>
     	<td colspan="4" width="176" style="text-align:left; font-size:22px; font-family:Arial;"><strong>Total:</strong> <?php echo  number_format($tot, 0, ',', '.') ?></td>
@@ -140,16 +140,13 @@ $totiva=$cb['iva10']+$cb['iva5'];
     	<td colspan="4" style="text-align:left; height:26px;"><strong>-- Liquidacion de IVA --</td>
     </tr>
 	<tr>
-    	<td colspan="4" style="text-align:left; height:26px;">Exenta: 0</td>
-    </tr>
-	<tr>
     	<td colspan="4" style="text-align:left; height:26px;">10%:<?php echo round($cb['iva10']); ?></td>
     </tr>
 	<tr>
     	<td colspan="4" style="text-align:left; height:26px;">5%:<?php echo round($cb['iva5']); ?></td>
     </tr>
 	<tr>
-    	<td colspan="4" style="text-align:left; height:26px;"><strong>Total:<?php echo round($totiva); ?></td>
+    	<td colspan="4" style="text-align:left; height:26px;"><strong>Total IVA:<?php echo round($totiva); ?></td>
     </tr>
  	<tr>
     	<td colspan="4" style="text-align:left; height:26px;">&nbsp;</td>
@@ -158,64 +155,60 @@ $totiva=$cb['iva10']+$cb['iva5'];
     	<td colspan="4" style="text-align:center; height:26px;">*Gracias por su preferencia*</td>
     </tr>
 
-
 </table>
 </div>
 <!-- DUPLICADO -->
 <div id="con_gral" style="font-size:10px; font-family:Arial;  ">
-<table width="215x">
+<table width="100%">
 	<tr>
     	<td colspan="4" style="text-align:center;">COMPER</td>
     </tr>
 	<tr>
-    	<td colspan="4" style="text-align:center;">de Victor G. Perez Velázquez </td>
+    	<td colspan="4" style="font-size:9px; text-align:center;">de Victor G. Perez Velázquez </td>
     </tr>
 	<tr>
-    	<td colspan="4" style="text-align:center; font-size=8px">Comercio al por menor de otros productos en comercio no especializados </td>
+    	<td colspan="4" style="font-size:9px; text-align:center; ">Comercio al por menor de otros productos en comercio no especializados </td>
     </tr>
     <tr>
-    	<td colspan="4" style="text-align:center;">C.Matriz: Julia Miranda Cueto e/ Ayala Candia - Fndo. de la Mora</td>
+    	<td colspan="5" style="font-size:9px; text-align:center;">C.Matriz: Julia Miranda Cueto e/ Ayala Candia - Fndo. de la Mora</td>
     </tr>
     <tr>
-    	<td colspan="4" style="text-align:center;">Tel.: 0982 185 359 - 0984 289 831 - 0981 180 469</td>
+    	<td colspan="4" style="font-size:9px; text-align:center;">Tel.: 0982 185 359 - 0984 289 831 - 0981 180 469</td>
     </tr>
     <tr>
-    	<td colspan="4" style="text-align:center;">RUC: 2238812-5</td>
+    	<td colspan="4" style="font-size:9px; text-align:center;">RUC: 2238812-5</td>
     </tr>
     <tr>
-    	<td colspan="4" style="text-align:center;">Timbrado:<?php echo $nca['timbrado'] ?></td>
+    	<td colspan="4" style="font-size:9px; text-align:center;">Timbrado:<?php echo $nca['timbrado'] ?></td>
     </tr>
     <tr>
-    	<td colspan="4" style="text-align:center;">Inicio:<?php echo date("d-m-Y", strtotime($nca['inicio'])) ?></td>
+    	<td colspan="4" style="font-size:9px; text-align:center;">Inicio:<?php echo date("d-m-Y", strtotime($nca['inicio'])) ?> Vencimiento:<?php echo date("d-m-Y", strtotime($nca['validez'])) ?></td>
+    <!-- </tr>
+    <tr>
+    	<td colspan="4" style="font-size:9px; text-align:center;">Vencimiento:<?php echo date("d-m-Y", strtotime($nca['validez'])) ?></td>
+    </tr> -->
+    <tr>
+    	<td colspan="4" style="font-size:9px; text-align:center;">Fecha de Emision: <?php echo date("d-m-Y", strtotime($cb['falta']))?></td>
     </tr>
     <tr>
-    	<td colspan="4" style="text-align:center;">Vencimiento:<?php echo date("d-m-Y", strtotime($nca['validez'])) ?></td>
-    </tr>
-    <tr>
-    	<td colspan="4" style="text-align:center;">Fecha de Emision: <?php echo date("d-m-Y", strtotime($cb['falta']))?></td>
-    </tr>
-    <tr>
-    	<td colspan="4" style="text-align:center;">Factura <?php if ($cb['tipofac'] == 1) { echo "Contado";}else{ echo "Credito";} ?>
+    	<td colspan="4" style="font-size:9px; text-align:center;">Factura <?php if ($cb['tipofac'] == 1) { echo "Contado";}else{ echo "Credito";} ?>
             
-          N°:</br> <?php echo $suc[0] ?>-<?php echo $nca[0] ?>-<?php echo $nroini.$cb["nro"] ?></td>
+          N°:<?php echo $suc[0] ?>-<?php echo $nca[0] ?>-<?php echo $nroini.$cb["nro"] ?></td>
     </tr>
-
-	<tr>
-    	<td colspan="4" style="text-align:center; height:26px;">-- Detalle --</td>
-    </tr>
-
-	<tr>
+	<!-- <tr>
+    	<td colspan="4" style="font-size:9px; text-align:center; height:26px;">-- Detalle --</td>
+    </tr> -->
+	<!-- <tr>
     	<td colspan="3" style="text-align:left; height:26px;">&nbsp;</td>
-    </tr>
-
+    </tr> -->
 	<tr>
     	<th width="38">Cant.</th>
     	<th width="176">Articulo</th>
     	<th width="176">Precio</th>
     	<th width="176">Total</th>
     </tr>
-<?php 
-$tot=0;
+	<?php 
+	$tot=0;
 	$sqldet="SELECT idart, cant, (precio*1.1) as precio FROM detventas WHERE idventa=".$_GET['identificador'];
 	$det = pg_query ($con, $sqldet) or die ("Problemas en $-campos detalle1:".pg_last_error ());
 	
@@ -228,7 +221,7 @@ $tot=0;
 
 	$tot1=$dt['cant']*$dt['precio'];
 	$tot=$tot+$tot1;
-?>
+	?>
 	<tr>
     	<td width="38"><?php echo number_format($dt['cant'], 0, ',', '.'); ?></td>
     	<td colspan="3" width="400"><?php echo $art; ?></td>
@@ -242,7 +235,7 @@ $tot=0;
     
  <?php 
  }
-$totiva=$cb['iva10']+$cb['iva5'];
+	$totiva=$cb['iva10']+$cb['iva5'];
  ?> 
 	<tr>
     	<td colspan="4" width="176" style="text-align:left; font-size:22px; font-family:Arial;"><strong>Total:</strong> <?php echo  number_format($tot, 0, ',', '.') ?></td>
@@ -265,16 +258,13 @@ $totiva=$cb['iva10']+$cb['iva5'];
     	<td colspan="4" style="text-align:left; height:26px;"><strong>-- Liquidacion de IVA --</td>
     </tr>
 	<tr>
-    	<td colspan="4" style="text-align:left; height:26px;">Exenta: 0</td>
-    </tr>
-	<tr>
     	<td colspan="4" style="text-align:left; height:26px;">10%:<?php echo round($cb['iva10']); ?></td>
     </tr>
 	<tr>
     	<td colspan="4" style="text-align:left; height:26px;">5%:<?php echo round($cb['iva5']); ?></td>
     </tr>
 	<tr>
-    	<td colspan="4" style="text-align:left; height:26px;"><strong>Total:<?php echo round($totiva); ?></td>
+    	<td colspan="4" style="text-align:left; height:26px;"><strong>Total IVA:<?php echo round($totiva); ?></td>
     </tr>
  	<tr>
     	<td colspan="4" style="text-align:left; height:26px;">&nbsp;</td>
