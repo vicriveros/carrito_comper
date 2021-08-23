@@ -17,9 +17,9 @@ switch($page){
 	
 //		if (isset($_POST['producto']) && $_POST['producto']!='' && isset($_POST['cantidad']) && $_POST['cantidad']!='') {
 		if ($_POST['producto']!='' && $_POST['cantidad'] > 0) {
-			$datos = pg_query ($con, "SELECT codfab, precio FROM articulos WHERE idart='".$_POST['idart']."'") or die ("Problemas en $-campos:".pg_last_error ());
+			$datos = pg_query ($con, "SELECT codfab, precio2 FROM articulos WHERE idart='".$_POST['idart']."'") or die ("Problemas en $-campos:".pg_last_error ());
 				$dt=pg_fetch_array($datos);
-				$precio= $dt["precio"];
+				$precio= $dt["precio2"];
 				$codigo = $dt["codfab"];
 									
 						

@@ -41,7 +41,7 @@ function imprimir(){
 </HEAD>
 <body onLoad="imprimir();">
 <div id="con_gral" style="font-size:10px; font-family:Arial;  ">
-<table width="215x">
+<table width="260x">
 	<tr>
     	<td colspan="4" style="text-align:center;">COMPER</td>
     </tr>
@@ -75,17 +75,14 @@ function imprimir(){
     <tr>
     	<td colspan="4" style="text-align:center;">Factura <?php if ($cb['tipofac'] == 1) { echo "Contado";}else{ echo "Credito";} ?>
             
-          N°:</br> <?php echo $suc[0] ?>-<?php echo $nca[0] ?>-<?php echo $nroini.$cb["nro"] ?></td>
+          N°:<?php echo $suc[0] ?>-<?php echo $nca[0] ?>-<?php echo $nroini.$cb["nro"] ?></td>
     </tr>
-
-	<tr>
-    	<td colspan="4" style="text-align:center; height:26px;">-- Detalle --</td>
-    </tr>
-
-	<tr>
+	<!-- <tr>
+    	<td colspan="4" style="font-size:9px; text-align:center; height:26px;">-- Detalle --</td>
+    </tr> -->
+	<!-- <tr>
     	<td colspan="3" style="text-align:left; height:26px;">&nbsp;</td>
-    </tr>
-
+    </tr> -->
 	<tr>
     	<th width="38">Cant.</th>
     	<th width="176">Articulo</th>
@@ -94,7 +91,7 @@ function imprimir(){
     </tr>
 <?php 
 $tot=0;
-	$sqldet="SELECT idart, cant, precio FROM detventas WHERE idventa=".$_GET['identificador'];
+	$sqldet="SELECT idart, cant, (precio*1.1) as precio FROM detventas WHERE idventa=".$_GET['identificador'];
 	$det = pg_query ($con, $sqldet) or die ("Problemas en $-campos detalle1:".pg_last_error ());
 	
 	while($dt=pg_fetch_array($det)){
@@ -195,7 +192,7 @@ $totiva=$cb['iva10']+$cb['iva5'];
     	<td colspan="4" style="text-align:center;">Vencimiento:<?php echo date("d-m-Y", strtotime($nca['validez'])) ?></td>
     </tr>
     <tr>
-    	<td colspan="4" style="text-align:center;">Fecha de Emision:  <br><?php echo date("d-m-Y", strtotime($cb['falta']))?></td>
+    	<td colspan="4" style="text-align:center;">Fecha de Emision: <?php echo date("d-m-Y", strtotime($cb['falta']))?></td>
     </tr>
     <tr>
     	<td colspan="4" style="text-align:center;">Factura <?php if ($cb['tipofac'] == 1) { echo "Contado";}else{ echo "Credito";} ?>
@@ -219,7 +216,7 @@ $totiva=$cb['iva10']+$cb['iva5'];
     </tr>
 <?php 
 $tot=0;
-	$sqldet="SELECT idart, cant, precio FROM detventas WHERE idventa=".$_GET['identificador'];
+	$sqldet="SELECT idart, cant, (precio*1.1) as precio FROM detventas WHERE idventa=".$_GET['identificador'];
 	$det = pg_query ($con, $sqldet) or die ("Problemas en $-campos detalle1:".pg_last_error ());
 	
 	while($dt=pg_fetch_array($det)){
@@ -296,5 +293,5 @@ $totiva=$cb['iva10']+$cb['iva5'];
 function redireccionarPagina() {
 	window.location = "cabecera.php";
 }
-setTimeout("redireccionarPagina()", 800);
+//setTimeout("redireccionarPagina()", 800);
 </script>

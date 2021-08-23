@@ -92,7 +92,7 @@ $descrip = 'VENTA FACTURA Nº '.$nro.' CLIENTE: '.$cl[0];
 foreach($_SESSION['detalle'] as $k => $detalle){
 	$tot_det=$detalle['cantidad']*$detalle['precio'];
 	$sqlinsertdet="INSERT INTO detventas (idventa, idart, cant, precio, falta, ivanum, idunidad, idunidad2, basimp, descu, cant2, prdesc, costo)
-	VALUES(".$idventa.", '".$detalle["idart"]."', ".$detalle["cantidad"].", ".$detalle["precio"].", '".$fecha."', '10', '0', '0', '100', '0', ".$detalle["cantidad"].", ".$detalle["precio"].", ".$uc["ultcosto"].")";
+	VALUES(".$idventa.", '".$detalle["idart"]."', ".$detalle["cantidad"].", ".$detalle["precio"]/1.1.", '".$fecha."', '10', '0', '0', '100', '0', ".$detalle["cantidad"].", ".$detalle["precio"]/1.1.", ".$uc["ultcosto"].")";
 
 	$insertdet = pg_query ($con, $sqlinsertdet) or die ("Problemas en detalle:".pg_last_error ());
 	
