@@ -130,6 +130,7 @@ foreach($_SESSION['detalle'] as $k => $detalle){
 
 unset($_SESSION['detalle']);
 echo '<script>location.href="redir.php?id='.$idventa.'";</script>';
+
 }// fin del if de total
 
 ?>

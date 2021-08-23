@@ -164,11 +164,137 @@ $totiva=$cb['iva10']+$cb['iva5'];
 
 </table>
 </div>
+<!-- DUPLICADO -->
+<div id="con_gral" style="font-size:10px; font-family:Arial;  ">
+<table width="215x">
+	<tr>
+    	<td colspan="4" style="text-align:center;">COMPER</td>
+    </tr>
+	<tr>
+    	<td colspan="4" style="text-align:center;">de Victor G. Perez Velázquez </td>
+    </tr>
+	<tr>
+    	<td colspan="4" style="text-align:center; font-size=8px">Comercio al por menor de otros productos en comercio no especializados </td>
+    </tr>
+    <tr>
+    	<td colspan="4" style="text-align:center;">C.Matriz: Julia Miranda Cueto e/ Ayala Candia - Fndo. de la Mora</td>
+    </tr>
+    <tr>
+    	<td colspan="4" style="text-align:center;">Tel.: 0982 185 359 - 0984 289 831 - 0981 180 469</td>
+    </tr>
+    <tr>
+    	<td colspan="4" style="text-align:center;">RUC: 2238812-5</td>
+    </tr>
+    <tr>
+    	<td colspan="4" style="text-align:center;">Timbrado:<?php echo $nca['timbrado'] ?></td>
+    </tr>
+    <tr>
+    	<td colspan="4" style="text-align:center;">Inicio:<?php echo date("d-m-Y", strtotime($nca['inicio'])) ?></td>
+    </tr>
+    <tr>
+    	<td colspan="4" style="text-align:center;">Vencimiento:<?php echo date("d-m-Y", strtotime($nca['validez'])) ?></td>
+    </tr>
+    <tr>
+    	<td colspan="4" style="text-align:center;">Fecha de Emision:  <br><?php echo date("d-m-Y", strtotime($cb['falta']))?></td>
+    </tr>
+    <tr>
+    	<td colspan="4" style="text-align:center;">Factura <?php if ($cb['tipofac'] == 1) { echo "Contado";}else{ echo "Credito";} ?>
+            
+          N°:</br> <?php echo $suc[0] ?>-<?php echo $nca[0] ?>-<?php echo $nroini.$cb["nro"] ?></td>
+    </tr>
+
+	<tr>
+    	<td colspan="4" style="text-align:center; height:26px;">-- Detalle --</td>
+    </tr>
+
+	<tr>
+    	<td colspan="3" style="text-align:left; height:26px;">&nbsp;</td>
+    </tr>
+
+	<tr>
+    	<th width="38">Cant.</th>
+    	<th width="176">Articulo</th>
+    	<th width="176">Precio</th>
+    	<th width="176">Total</th>
+    </tr>
+<?php 
+$tot=0;
+	$sqldet="SELECT idart, cant, precio FROM detventas WHERE idventa=".$_GET['identificador'];
+	$det = pg_query ($con, $sqldet) or die ("Problemas en $-campos detalle1:".pg_last_error ());
+	
+	while($dt=pg_fetch_array($det)){
+	
+	$sqlart="SELECT nombres FROM articulos WHERE idart=". $dt['idart'];
+	$arti = pg_query ($con, $sqlart) or die ("Problemas en $-campos detalle art:".pg_last_error ());
+	$at=pg_fetch_array($arti);
+	$art=$at['nombres'];
+
+	$tot1=$dt['cant']*$dt['precio'];
+	$tot=$tot+$tot1;
+?>
+	<tr>
+    	<td width="38"><?php echo number_format($dt['cant'], 0, ',', '.'); ?></td>
+    	<td colspan="3" width="400"><?php echo $art; ?></td>
+	</tr>
+	<tr>
+		<td width="38"></td>
+		<td width="38"></td>
+    	<td width="38"><?php echo number_format($dt['precio'], 0, ',', '.'); ?></td>
+    	<td width="38"><?php echo number_format($tot1, 0, ',', '.'); ?></td>
+    </tr>
+    
+ <?php 
+ }
+$totiva=$cb['iva10']+$cb['iva5'];
+ ?> 
+	<tr>
+    	<td colspan="4" width="176" style="text-align:left; font-size:22px; font-family:Arial;"><strong>Total:</strong> <?php echo  number_format($tot, 0, ',', '.') ?></td>
+    </tr>
+
+ 	<tr>
+    	<td colspan="4" style="text-align:left; height:26px;">&nbsp;</td>
+    </tr>
+	<tr>
+    	<th colspan="4" style="text-align:left; height:26px;"><strong>-- Datos del Cliente--</th>
+    </tr>
+	<tr>
+    	<td colspan="4" style="text-align:left; height:26px;">Razon Social: <?php echo $cl['nombres'] ?></td>
+    </tr>
+	<tr>
+    	<td colspan="4" style="text-align:left; height:26px;">RUC/CI: <?php echo $cl['ruc'] ?></td>
+    </tr>
+  
+	<tr>
+    	<td colspan="4" style="text-align:left; height:26px;"><strong>-- Liquidacion de IVA --</td>
+    </tr>
+	<tr>
+    	<td colspan="4" style="text-align:left; height:26px;">Exenta: 0</td>
+    </tr>
+	<tr>
+    	<td colspan="4" style="text-align:left; height:26px;">10%:<?php echo round($cb['iva10']); ?></td>
+    </tr>
+	<tr>
+    	<td colspan="4" style="text-align:left; height:26px;">5%:<?php echo round($cb['iva5']); ?></td>
+    </tr>
+	<tr>
+    	<td colspan="4" style="text-align:left; height:26px;"><strong>Total:<?php echo round($totiva); ?></td>
+    </tr>
+ 	<tr>
+    	<td colspan="4" style="text-align:left; height:26px;">&nbsp;</td>
+    </tr>
+ 	<tr>
+    	<td colspan="4" style="text-align:center; height:26px;">*Gracias por su preferencia*</td>
+    </tr>
+
+
+</table>
+</div>
+<!-- FIN DUPLICADO -->
 </BODY>
 </HTML>
 <script type="text/javascript">
 function redireccionarPagina() {
 	window.location = "cabecera.php";
 }
-//setTimeout("redireccionarPagina()", 800);
+setTimeout("redireccionarPagina()", 800);
 </script>
