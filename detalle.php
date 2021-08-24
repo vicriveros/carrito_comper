@@ -67,8 +67,8 @@ if(count($_SESSION['detalle'])>0){
         <div class="form-group col-md-12">
           <div><strong>Precio:</strong>
             <select id="editar_precio<?php echo $detalle['idart']?>" name="editar_precio" class="col-md-10 form-control">
-                  <option value="<?php echo $dt['precio']; ?>" selected>Precio 1 - <?php echo number_format($dt['precio'], 0, ',', '.'); ?></option>
-                  <?php if($dt['precio2']>0){echo '<option value="'.$dt['precio2'].'">Precio 2 -'. number_format($dt['precio2'], 0, ",", ".").'</option>';};?>
+                  <?php if($dt['precio']>0){echo '<option value="'.$dt['precio'].'">Precio 1 -'. number_format($dt['precio'], 0, ",", ".").'</option>';};?>
+                  <option value="<?php echo $dt['precio2']; ?>" selected>Precio 2 - <?php echo number_format($dt['precio2'], 0, ',', '.'); ?></option>
                   <?php if($dt['precio3']>0){echo '<option value="'.$dt['precio3'].'">Precio 3 -'. number_format($dt['precio3'], 0, ",", ".").'</option>';};?>
                   <?php if($dt['precio4']>0){echo '<option value="'.$dt['precio4'].'">Precio 4 -'. number_format($dt['precio4'], 0, ",", ".").'</option>';};?>
             </select>
