@@ -80,9 +80,10 @@
             <?php 
                 // var_dump($_SESSION['login_vendedor']);
               $sql="SELECT a.idventa, a.nro, a.falta, b.nombres, a.exentas+a.grav5+a.grav10+a.iva5+a.iva10 as total FROM vi_cabventas a inner join clientes b on a.idclie=b.idclie where a.idvend=".$_SESSION['login_vendedor']. " order by idventa desc limit 10";
+              //var_dump($sql);
               $consulta=pg_query($con, $sql)or die ("Problemas en consulta ".pg_last_error ());
               $cant=pg_num_rows($consulta);
-              $ventas=pg_fetch_array($consulta);
+              //$ventas=pg_fetch_array($consulta);
 
                 while($ventas=pg_fetch_array($consulta)){
 

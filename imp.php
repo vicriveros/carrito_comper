@@ -5,7 +5,8 @@ include('_conexion.php');
 	$sqlcab="SELECT idclie, nro, falta, idcaja, tipofac, idventa, exentas, grav5, grav10, iva5, iva10 FROM cabventas WHERE idventa=".$_GET["identificador"]." and idcaja=".$_SESSION['login_idcaja'];
 	$cab = pg_query ($con, $sqlcab) or die ("Problemas en $-campos cabecera:".pg_last_error ());
 	$cb=pg_fetch_array($cab);
-
+	
+	$tipofac=$cb['tipofac'];
 	$cf=strlen($cb['nro']);
 	$fal=7-$cf;
 	$nroini='';
@@ -65,10 +66,7 @@ function imprimir(){
     </tr>
     <tr>
     	<td colspan="4" style="font-size:9px; text-align:center;">Inicio:<?php echo date("d-m-Y", strtotime($nca['inicio'])) ?> Vencimiento:<?php echo date("d-m-Y", strtotime($nca['validez'])) ?></td>
-    <!-- </tr>
-    <tr>
-    	<td colspan="4" style="font-size:9px; text-align:center;">Vencimiento:<?php echo date("d-m-Y", strtotime($nca['validez'])) ?></td>
-    </tr> -->
+    </tr>
     <tr>
     	<td colspan="4" style="font-size:9px; text-align:center;">Fecha de Emision: <?php echo date("d-m-Y", strtotime($cb['falta']))?></td>
     </tr>
@@ -77,12 +75,6 @@ function imprimir(){
             
           N°:<?php echo $suc[0] ?>-<?php echo $nca[0] ?>-<?php echo $nroini.$cb["nro"] ?></td>
     </tr>
-	<!-- <tr>
-    	<td colspan="4" style="font-size:9px; text-align:center; height:26px;">-- Detalle --</td>
-    </tr> -->
-	<!-- <tr>
-    	<td colspan="3" style="text-align:left; height:26px;">&nbsp;</td>
-    </tr> -->
 	<tr>
     	<th width="38">Cant.</th>
     	<th width="176">Articulo</th>
@@ -158,6 +150,9 @@ function imprimir(){
 </table>
 </div>
 <!-- DUPLICADO -->
+<?php 
+if($tipofac==2){
+	echo '
 <div id="con_gral" style="font-size:10px; font-family:Arial;  ">
 <table width="100%">
 	<tr>
@@ -179,35 +174,25 @@ function imprimir(){
     	<td colspan="4" style="font-size:9px; text-align:center;">RUC: 2238812-5</td>
     </tr>
     <tr>
-    	<td colspan="4" style="font-size:9px; text-align:center;">Timbrado:<?php echo $nca['timbrado'] ?></td>
+		<td colspan="4" style="font-size:9px; text-align:center;">Timbrado:'.$nca['timbrado'].'</td>
+	</tr>
+    <tr>
+    	<td colspan="4" style="font-size:9px; text-align:center;">Inicio:'.date("d-m-Y", strtotime($nca['inicio'])).' Vencimiento:'.date("d-m-Y", strtotime($nca['validez'])).'</td>
     </tr>
     <tr>
-    	<td colspan="4" style="font-size:9px; text-align:center;">Inicio:<?php echo date("d-m-Y", strtotime($nca['inicio'])) ?> Vencimiento:<?php echo date("d-m-Y", strtotime($nca['validez'])) ?></td>
-    <!-- </tr>
-    <tr>
-    	<td colspan="4" style="font-size:9px; text-align:center;">Vencimiento:<?php echo date("d-m-Y", strtotime($nca['validez'])) ?></td>
-    </tr> -->
-    <tr>
-    	<td colspan="4" style="font-size:9px; text-align:center;">Fecha de Emision: <?php echo date("d-m-Y", strtotime($cb['falta']))?></td>
+    	<td colspan="4" style="font-size:9px; text-align:center;">Fecha de Emision: '.date("d-m-Y", strtotime($cb['falta'])).'</td>
     </tr>
     <tr>
-    	<td colspan="4" style="font-size:9px; text-align:center;">Factura <?php if ($cb['tipofac'] == 1) { echo "Contado";}else{ echo "Credito";} ?>
+    	<td colspan="4" style="font-size:9px; text-align:center;">Factura Crédito
             
-          N°:<?php echo $suc[0] ?>-<?php echo $nca[0] ?>-<?php echo $nroini.$cb["nro"] ?></td>
+          N°:'.$suc[0]. '-' . $nca[0] .'-'. $nroini.$cb["nro"] .'</td>
     </tr>
-	<!-- <tr>
-    	<td colspan="4" style="font-size:9px; text-align:center; height:26px;">-- Detalle --</td>
-    </tr> -->
-	<!-- <tr>
-    	<td colspan="3" style="text-align:left; height:26px;">&nbsp;</td>
-    </tr> -->
 	<tr>
     	<th width="38">Cant.</th>
     	<th width="176">Articulo</th>
     	<th width="176">Precio</th>
     	<th width="176">Total</th>
-    </tr>
-	<?php 
+    </tr>';
 	$tot=0;
 	$sqldet="SELECT idart, cant, (precio*1.1) as precio FROM detventas WHERE idventa=".$_GET['identificador'];
 	$det = pg_query ($con, $sqldet) or die ("Problemas en $-campos detalle1:".pg_last_error ());
@@ -221,24 +206,24 @@ function imprimir(){
 
 	$tot1=$dt['cant']*$dt['precio'];
 	$tot=$tot+$tot1;
-	?>
+	echo
+	'
 	<tr>
-    	<td width="38"><?php echo number_format($dt['cant'], 0, ',', '.'); ?></td>
-    	<td colspan="3" width="400"><?php echo $art; ?></td>
+    	<td width="38">'.number_format($dt["cant"], 0, ",", ".").'</td>
+    	<td colspan="3" width="400">'.$art.'</td>
 	</tr>
 	<tr>
 		<td width="38"></td>
 		<td width="38"></td>
-    	<td width="38"><?php echo number_format($dt['precio'], 0, ',', '.'); ?></td>
-    	<td width="38"><?php echo number_format($tot1, 0, ',', '.'); ?></td>
-    </tr>
-    
- <?php 
- }
+    	<td width="38">'. number_format($dt['precio'], 0, ',', '.').'</td>
+    	<td width="38">'. number_format($tot1, 0, ',', '.') .'</td>
+    </tr>';
+}
 	$totiva=$cb['iva10']+$cb['iva5'];
- ?> 
+ echo 
+ '
 	<tr>
-    	<td colspan="4" width="176" style="text-align:left; font-size:22px; font-family:Arial;"><strong>Total:</strong> <?php echo  number_format($tot, 0, ',', '.') ?></td>
+    	<td colspan="4" width="176" style="text-align:left; font-size:22px; font-family:Arial;"><strong>Total:</strong> '. number_format($tot, 0, ',', '.') .'</td>
     </tr>
 
  	<tr>
@@ -248,23 +233,23 @@ function imprimir(){
     	<th colspan="4" style="text-align:left; height:26px;"><strong>-- Datos del Cliente--</th>
     </tr>
 	<tr>
-    	<td colspan="4" style="text-align:left; height:26px;">Razon Social: <?php echo $cl['nombres'] ?></td>
+    	<td colspan="4" style="text-align:left; height:26px;">Razon Social: '. $cl['nombres'] .'</td>
     </tr>
 	<tr>
-    	<td colspan="4" style="text-align:left; height:26px;">RUC/CI: <?php echo $cl['ruc'] ?></td>
+    	<td colspan="4" style="text-align:left; height:26px;">RUC/CI: '.$cl['ruc'] .'</td>
     </tr>
   
 	<tr>
     	<td colspan="4" style="text-align:left; height:26px;"><strong>-- Liquidacion de IVA --</td>
     </tr>
 	<tr>
-    	<td colspan="4" style="text-align:left; height:26px;">10%:<?php echo round($cb['iva10']); ?></td>
+    	<td colspan="4" style="text-align:left; height:26px;">10%:'.round($cb['iva10']).'</td>
     </tr>
 	<tr>
-    	<td colspan="4" style="text-align:left; height:26px;">5%:<?php echo round($cb['iva5']); ?></td>
+    	<td colspan="4" style="text-align:left; height:26px;">5%:'. round($cb['iva5']).'</td>
     </tr>
 	<tr>
-    	<td colspan="4" style="text-align:left; height:26px;"><strong>Total IVA:<?php echo round($totiva); ?></td>
+    	<td colspan="4" style="text-align:left; height:26px;"><strong>Total IVA:'. round($totiva).'</td>
     </tr>
  	<tr>
     	<td colspan="4" style="text-align:left; height:26px;">&nbsp;</td>
@@ -277,6 +262,8 @@ function imprimir(){
 </table>
 </div>
 <!-- FIN DUPLICADO -->
+';
+}?>
 </BODY>
 </HTML>
 <script type="text/javascript">
