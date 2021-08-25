@@ -1,5 +1,8 @@
 <?php 
   include('_conexion.php');
+  include('cabezote.php');
+  include('menu.php');
+
   session_start();
   if ($_GET['clie_id']) {
     $sqlcp="SELECT nombres, ruc, telefono, direccion, barrio, ubicacion FROM clientes WHERE idclie= ".$_GET['clie_id'];

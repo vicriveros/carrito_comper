@@ -37,7 +37,6 @@ if ($_POST['usuario'] != ''){
       
     }
 }
- 
  ?>
 <!DOCTYPE html>
 <html>
