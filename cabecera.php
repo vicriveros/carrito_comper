@@ -346,6 +346,10 @@
     <script src="libs/js/alertify/lib/alertify.min.js"></script>
 
 <?php 
+  if (empty($_SESSION['login_user'])) {
+    echo '<script>location.href="index.php";</script>';
+  }
+  
 if ($_GET['clie_id']) {
   echo'
   <script>
