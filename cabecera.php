@@ -4,6 +4,11 @@
   include('menu.php');
 
   session_start();
+
+  if (empty($_SESSION['login_user'])) {
+    echo '<script>location.href="index.php";</script>';
+  }
+  
   if ($_GET['clie_id']) {
     $sqlcp="SELECT nombres, ruc, telefono, direccion, barrio, ubicacion FROM clientes WHERE idclie= ".$_GET['clie_id'];
     $datoscp = pg_query ($con, $sqlcp) or die ("Problemas en $-campos: 3 ".pg_last_error ());

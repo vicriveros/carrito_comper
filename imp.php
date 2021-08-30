@@ -143,6 +143,14 @@ function imprimir(){
  	<tr>
     	<td colspan="4" style="text-align:left; height:26px;">&nbsp;</td>
     </tr>
+    </tr>
+	<?php
+		if($tipofac==2){
+		echo '
+		<tr>
+			<td colspan="4" style="font-size:9px; text-align:center; height:26px;">Esta factura deberá ser cancelada dentro del plazo establecido, de no ser asi aplicara el 3% de interes mensual. Los autorizo incluyan mi nombre o la razón social que represento en el registro general de morosos de inforconf o el de otra entidad especializada en el mismo, y proporcionar dicha información a terceras personas</td>
+		</tr>';
+	}?>
  	<tr>
     	<td colspan="4" style="text-align:center; height:26px;">*Gracias por su preferencia*</td>
     </tr>
@@ -254,6 +262,9 @@ if($tipofac==2){
  	<tr>
     	<td colspan="4" style="text-align:left; height:26px;">&nbsp;</td>
     </tr>
+	<tr>
+		<td colspan="4" style="font-size:9px; text-align:center; height:26px;">Esta factura deberá ser cancelada dentro del plazo establecido, de no ser asi aplicara el 3% de interes mensual. Los autorizo incluyan mi nombre o la razón social que represento en el registro general de morosos de inforconf o el de otra entidad especializada en el mismo, y proporcionar dicha información a terceras personas</td>
+	</tr>
  	<tr>
     	<td colspan="4" style="text-align:center; height:26px;">*Gracias por su preferencia*</td>
     </tr>
