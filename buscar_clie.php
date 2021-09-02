@@ -20,5 +20,3 @@ while($dt=pg_fetch_array($datos)){
 	echo $resul.']';
 }
 ?>
-
-

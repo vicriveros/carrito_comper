@@ -119,6 +119,12 @@
               </a>
             </li>
 
+            <li class="nav-item">
+              <a href="visor-facturas.php" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Visor Facturas</p>
+              </a>
+            </li>
           </ul>
 
         </li>
