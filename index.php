@@ -13,7 +13,7 @@ if ($_POST['usuario'] != ''){
   
     if ($cant > 0)
     {
-      $sql2="SELECT a.nrocaja, a.idsucursal, a.timb, b.nro_timbrado as timbrado FROM cajas a inner join timbrados b on a.idcaja=b.idcaja WHERE b.idcaja=".$dt['idcaja'].' and b.activo=1 and b.tipo_doc=1';
+      $sql2="SELECT a.nrocaja, a.idsucursal, a.timb, b.nro_timbrado as timbrado, b.idtimb FROM cajas a inner join timbrados b on a.idcaja=b.idcaja WHERE b.idcaja=".$dt['idcaja'].' and b.activo=1 and b.tipo_doc=1';
       $cons2=pg_query($con, $sql2)or die ("Problemas en consulta ".pg_last_error ());
       $nca=pg_fetch_array($cons2);
 
@@ -32,6 +32,8 @@ if ($_POST['usuario'] != ''){
       $_SESSION['login_sucursal'] = $nca['idsucursal'];
       $_SESSION['login_timb'] = $nca['timb'];
       $_SESSION['login_timbrado'] = $nca['timbrado'];
+      $_SESSION['login_idtimb'] = $nca['idtimb'];
+
 
       echo '<script>location.href="cabecera.php";</script>';
       
