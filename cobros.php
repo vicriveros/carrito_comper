@@ -109,7 +109,7 @@ session_start();
               //var_dump($sql);
               $consulta=pg_query($con, $sql)or die ("Problemas en consulta ".pg_last_error ());                  
               while($ventas=pg_fetch_array($consulta)){
-                $sql_pagos="SELECT sum(monto) from detcobros where idventa=".$ventas['idventa'];
+                $sql_pagos="SELECT sum(monto - interes) from detcobros where idventa=".$ventas['idventa'];
                 $consulta_pagos=pg_query($con, $sql_pagos)or die ("Problemas en:".pg_last_error ());
                 $sum_pagos=pg_fetch_array($consulta_pagos);
                 if($sum_pagos[0] < $ventas['total']){
@@ -180,6 +180,7 @@ session_start();
          <form name="form_cobros" id="form_cobros" method="post" action="guardar_cobros.php">
           <input id="idclie" name="idclie" type="hidden"  />
           <input id="idventa" name="idventa" type="hidden"  />
+          <input id="saldo" name="saldo" type="hidden"  />
 
           <div class="form-group">
             <label for="recipient-name" class="control-label">Cliente:</label>
@@ -200,20 +201,27 @@ session_start();
             </div>
             
             <div class="form-row">
-              <div class="form-group col-md-6">
+              <div class="form-group col-md-4">
                 <label for="recipient-name" class="control-label">Interes:</label>
                 <input type="text" class="form-control" id="interes" name="interes" disabled>
               </div>
-              <div class="form-group col-md-6">
+              <div class="form-group col-md-4">
                 <label for="recipient-name" class="control-label">Saldo + Interes:</label>
                 <input type="text" class="form-control" id="saldo_interes" name="saldo_interes" disabled>
+              </div>
+              <div class="form-group col-md-4">
+                <label for="recipient-name" class="control-label">Cobrar Interes:</label>
+                <select class="form-control" id="cobrar_interes" name="cobrar_interes">
+                  <option value="0" selected>NO Cobrar</option>
+                  <option value="1" >SI Cobrar</option>
+                </select>
               </div>
               
             </div>
             
 
             <label for="recipient-name" class="control-label">Nro Recibo:</label>
-            <input type="text" class="form-control" id="recibo" name="recibo">            
+            <input type="text" class="form-control" id="recibo" name="recibo" require>            
             
             <div class="form-row">
               <div class="form-group col-md-4">
@@ -230,13 +238,28 @@ session_start();
               </div>
             </div>
 
+            <div class="form-row">
+              <div class="form-group col-md-4">
+                <label for="inputEmail4">Retencion Nro</label>
+                <input type="text" class="form-control" name="retencion_nro" id="retencion_nro" value="0">
+              </div>
+              <div class="form-group col-md-4">
+                <label for="inputPassword4">Retencion Fecha</label>
+                <input type="date" class="form-control" name="retencion_fecha" id="retencion_fecha" value="0">
+              </div>
+              <div class="form-group col-md-4">
+                <label for="inputPassword4">Retencion Monto</label>
+                <input type="number" class="form-control" name="retencion_monto" id="retencion_monto" value="0">
+              </div>
+            </div>
+
           </div>
 
       </div>
 
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-        <button id="enviar" type="submit" class="btn btn-success">Guardar</button>
+        <button onclick="validar()" id="enviar" type="button" class="btn btn-success">Guardar</button>
       </form>
       </div>
     </div>
@@ -266,9 +289,38 @@ function rellenar(nro, idclie, nombres, total, saldo, idventa, interes){
   $("#nro").val( nro );
   $("#montof").val( sepmiles(total ));
   $("#saldof").val( sepmiles(saldo ));
+  $("#saldo").val( saldo );
   $("#idventa").val( idventa );
   $("#interes").val( sepmiles(interes ));
   $("#saldo_interes").val( sepmiles(interes + saldo ));
+}
+
+function validar(){
+  let sum = 0;
+  let efec = parseInt($('#efectivo').val());
+  let cheq = parseInt($('#cheque').val());
+  let tarj = parseInt($('#tarjeta').val());
+  let retencion = parseInt($('#retencion_monto').val());
+  let saldo = parseInt($('#saldo').val());
+  let interes = parseInt($('#interes').val());
+
+  if($('#cobrar_interes').val() == 0){
+    sum = efec + cheq + tarj + retencion;
+    if (sum > parseInt(saldo)){
+      alert('El monto ingresado es mayor al saldo!');
+    }else{
+      $('#form_cobros').submit();
+    }
+  
+  }else{
+
+    sum = efec + cheq + tarj + retencion + interes;
+    if (sum > parseInt(saldo)){
+      alert('El monto ingresado es mayor al saldo!');
+    }else{
+      $('#form_cobros').submit();
+    }
+  }
 }
 
 $(function(){
