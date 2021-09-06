@@ -14,7 +14,7 @@ $datos = pg_query ($con, $insert_cab) or die ("Problemas en $-campos:".pg_last_e
 
 $montot=$_POST['efectivo'] + $_POST['cheque'] + $_POST['tarjeta']; 
 
-$insert_det="insert into detcobros (idcobro, idventa, monto, falta, interes) values ('".$nextid."', '".$_POST['idventa']."', '".$montot."', '".$fecha."', 0)";
+$insert_det="insert into detcobros (idcobro, idventa, monto, falta, interes) values ('".$nextid."', '".$_POST['idventa']."', '".$montot."', '".$fecha."', '".$_POST['interes']."')";
 $datos = pg_query ($con, $insert_det) or die ("Problemas en $-campos:".pg_last_error ());
 
 echo '<script>location.href="cobros.php?ok=1";</script>';

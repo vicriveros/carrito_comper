@@ -16,6 +16,11 @@ if ($_POST['usuario'] != ''){
       $cons2=pg_query($con, $sql2)or die ("Problemas en consulta ".pg_last_error ());
       $nca=pg_fetch_array($cons2);
 
+      $sql1="select por2 from confgeneral";
+      $datos1 = pg_query ($con, $sql1) or die ("Problemas en select:".pg_last_error ());
+      $idc=pg_fetch_array($datos1);
+      $por2=$idc[0];
+
       unset($_SESSION['login_idusu']);
       unset($_SESSION['login_user']);
       unset($_SESSION['login_idcaja']);
@@ -32,6 +37,7 @@ if ($_POST['usuario'] != ''){
       $_SESSION['login_timbrado'] = $nca['timbrado'];
       $_SESSION['login_idtimb'] = $nca['idtimb'];
       $_SESSION['login_nrocaja'] = $nca['nrocaja'];
+      $_SESSION['confgeneral_por2'] = $por2;
 
 
       echo '<script>location.href="cabecera.php";</script>';
