@@ -3,44 +3,44 @@ include('_conexion.php');
 @session_start();
 ?>
 <table class="table table-hover text-nowrap">
-                  <thead>
-                    <tr>
-                      <th>Codigo</th>
-                      <th>Descripci&oacute;n</th>
-                      <th>Cant.</th>
-                      <th>Precio</th>
-                      <th>Total</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody >
-                    <?php 
-                    if(count($_SESSION['detalle'])>0){
-                      foreach($_SESSION['detalle'] as $k => $detalle){ ?>
-                      <tr>
-                        <td style="text-align:right"><?php echo $detalle['codigo'];?></td>
-                        <td style="text-align:left"><?php echo $detalle['producto'];?></td>
-                        <td style="text-align:right"><?php echo $detalle['cantidad'];?></td>
-                        <td style="text-align:right"><?php echo number_format($detalle['precio'], 0, ',', '.');?></td>
-                        <td style="text-align:right"><?php echo number_format($detalle['total'], 0, ',', '.');?></td>
-                        <td>
-                          <button type="button" class="btn btn-sm btn-warning edit-art" data-toggle="modal" data-target="#editarModal<?php echo $detalle['idart'];?>" id="<?php echo $detalle['idart'];?>">Editar</button>
-                          <button type="button" class="btn btn-sm btn-danger eliminar-producto" id="<?php echo $detalle['id'];?>">Eliminar</button>
-                        </td>
-                      </tr>
-                    <?php }
-                    }else{?>
-                    <tr><td colspan="7"> No hay productos agregados </td></tr>
-                    <?php }?>
-                  </tbody>
-                </table>
+  <thead>
+    <tr>
+      <th>Codigo</th>
+      <th>Descripci&oacute;n</th>
+      <th>Cant.</th>
+      <th>Precio</th>
+      <th>Total</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody >
+    <?php 
+        if(count($_SESSION['detalle'])>0){
+          foreach($_SESSION['detalle'] as $k => $detalle){ ?>
+          <tr>
+            <td style="text-align:right"><?php echo $detalle['codigo'];?></td>
+            <td style="text-align:left"><?php echo $detalle['producto'];?></td>
+            <td style="text-align:right"><?php echo $detalle['cantidad'];?></td>
+            <td style="text-align:right"><?php echo number_format($detalle['precio'], 0, ',', '.');?></td>
+            <td style="text-align:right"><?php echo number_format($detalle['total'], 0, ',', '.');?></td>
+            <td>
+              <button type="button" class="btn btn-sm btn-warning edit-art" data-toggle="modal" data-target="#editarModal<?php echo $detalle['idart'];?>" id="<?php echo $detalle['idart'];?>">Editar</button>
+              <button type="button" class="btn btn-sm btn-danger eliminar-producto" id="<?php echo $detalle['id'];?>">Eliminar</button>
+            </td>
+          </tr>
+        <?php }
+        }else{?>
+        <tr><td colspan="7"> No hay productos agregados </td></tr>
+    <?php }?>
+  </tbody>
+</table>
 	
 <?php
-if(count($_SESSION['detalle'])>0){ 
-	foreach($_SESSION['detalle'] as $k => $detalle){ 
-	$datos = pg_query ($con, "SELECT precio, precio2, precio3, precio4 FROM articulos WHERE idart='".$detalle['idart']."'") 
-		or die ("Problemas:".pg_last_error ());
-	$dt=pg_fetch_array($datos);
+  if(count($_SESSION['detalle'])>0){
+    foreach($_SESSION['detalle'] as $k => $detalle){ 
+    $datos = pg_query ($con, "SELECT precio, precio2, precio3, precio4 FROM articulos WHERE idart='".$detalle['idart']."'") 
+      or die ("Problemas:".pg_last_error ());
+    $dt=pg_fetch_array($datos);
 ?>
 <!-- EDITAR -->
 <div class="modal fade" id="editarModal<?php echo $detalle['idart']?>" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">

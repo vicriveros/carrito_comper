@@ -1,4 +1,4 @@
-$(function(){
+$(function(){ 
 	$(".btn-agregar-producto").off("click");
 	$(".btn-agregar-producto").on("click", function(e) {
 		let idart = $("#txt_idart").val();
