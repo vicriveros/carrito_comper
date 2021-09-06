@@ -141,6 +141,18 @@
           </ul>
 
         </li>
+
+        <!--=======================
+            MENU Cobros  
+        ========================-->
+
+        <li class="nav-item">
+          <a href="cobros.php" class="nav-link">
+            <i class="nav-icon fas fa-cash-register"></i>
+            <p> Cobros<i class="right fas fa-angle-left"></i> </p>
+          </a>
+
+        </li>
         <!--=======================
             MENU FINANZAS  
         ========================-->

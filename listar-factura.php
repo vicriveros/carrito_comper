@@ -1,8 +1,8 @@
 <?php 
+session_start();
   include('_conexion.php');
   include('cabezote.php');
   include('menu.php');
-  session_start();
 ?>
 <!DOCTYPE html>
 <html>

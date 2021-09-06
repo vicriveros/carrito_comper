@@ -1,8 +1,7 @@
 <?php 
+session_start();
 //Configuracion de la conexion a base de datos
 include('_conexion.php');
-
-session_start();
 
 if ($_POST['usuario'] != ''){
   $cl=md5($_POST['clave']);
@@ -27,12 +26,12 @@ if ($_POST['usuario'] != ''){
       $_SESSION['login_user'] = $dt['aliasnomb'];
       $_SESSION['login_vendedor'] = $dt['idvend'];
       $_SESSION['login_deposito'] = $dt['iddeposito'];
-      $_SESSION['login_nrocaja'] = $nca['nrocaja'];
       $_SESSION['login_idcaja'] = $dt['idcaja'];
       $_SESSION['login_sucursal'] = $nca['idsucursal'];
       $_SESSION['login_timb'] = $nca['timb'];
       $_SESSION['login_timbrado'] = $nca['timbrado'];
       $_SESSION['login_idtimb'] = $nca['idtimb'];
+      $_SESSION['login_nrocaja'] = $nca['nrocaja'];
 
 
       echo '<script>location.href="cabecera.php";</script>';
