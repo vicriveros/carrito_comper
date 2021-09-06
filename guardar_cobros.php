@@ -13,8 +13,8 @@ $insert_cab="insert into cabcobros (idcobro, nro, idcaja, fecha, idclie, ualta, 
 $datos = pg_query ($con, $insert_cab) or die ("Problemas en $-campos:".pg_last_error ());
 
 $montot=$_POST['efectivo'] + $_POST['cheque'] + $_POST['tarjeta']; 
-
-$insert_det="insert into detcobros (idcobro, idventa, monto, falta, interes) values ('".$nextid."', '".$_POST['idventa']."', '".$montot."', '".$fecha."', '".$_POST['interes']."')";
+if($_POST['interes'] == ''){$_POST['interes']=0;}
+$insert_det="insert into detcobros (idcobro, idventa, monto, falta, interes) values ('".$nextid."', '".$_POST['idventa']."', '".$montot."', '".$fecha."', ".$_POST['interes'].")";
 $datos = pg_query ($con, $insert_det) or die ("Problemas en $-campos:".pg_last_error ());
 
 echo '<script>location.href="cobros.php?ok=1";</script>';
