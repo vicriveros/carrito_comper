@@ -12,14 +12,18 @@ $insert_cab="insert into cabcobros (idcobro, nro, idcaja, fecha, idclie, ualta, 
  values ('".$nextid."', '".$_POST['recibo']."', ".$_SESSION['login_idcaja'].", '".$fecha."', '".$_POST['idclie']."', ".$_SESSION['login_idusu'].", '".$fecha."', 1, '".$_POST['efectivo']."', '".$_POST['cheque']."', '".$_POST['tarjeta']."', ".$_SESSION['login_sucursal'].", 1, 0, 0, '001".$_SESSION['login_nrocaja']."', '".$_POST['retencion_nro']."', '".$_POST['retencion_fecha']."', '".$_POST['retencion_monto']."')";
 $datos = pg_query ($con, $insert_cab) or die ("Problemas en $-campos:".pg_last_error ());
 
-if($_POST['cobrar_interes'] == 0){
-    $_POST['interes']=0;
-}else{
-    if($_POST['interes'] == ''){$_POST['interes']=0;}
-}
-$montot=$_POST['efectivo'] + $_POST['cheque'] + $_POST['tarjeta'] + $_POST['retencion_monto'] + $_POST['interes']; 
+$montot=$_POST['efectivo'] + $_POST['cheque'] + $_POST['tarjeta'] + $_POST['retencion_monto'];
 
-$insert_det="insert into detcobros (idcobro, idventa, monto, falta, interes) values ('".$nextid."', '".$_POST['idventa']."', '".$montot."', '".$fecha."', ".$_POST['interes'].")";
+if($_POST['cobrar_interes'] == 0){
+    $_POST['interes_sin']=0;
+}else{
+    if($_POST['interes_sin'] == ''){$_POST['interes_sin']=0;}
+    if($_POST['interes_sin'] > $montot){
+        $_POST['interes_sin'] = $montot;
+    }
+}
+
+$insert_det="insert into detcobros (idcobro, idventa, monto, falta, interes) values ('".$nextid."', '".$_POST['idventa']."', '".$montot."', '".$fecha."', ".$_POST['interes_sin'].")";
 $datos = pg_query ($con, $insert_det) or die ("Problemas en $-campos:".pg_last_error ());
 
 echo '<script>location.href="cobros.php?ok=1";</script>';

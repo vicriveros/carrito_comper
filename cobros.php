@@ -181,6 +181,7 @@ session_start();
           <input id="idclie" name="idclie" type="hidden"  />
           <input id="idventa" name="idventa" type="hidden"  />
           <input id="saldo" name="saldo" type="hidden"  />
+          <input id="interes_sin" name="interes_sin" type="hidden"  />
 
           <div class="form-group">
             <label for="recipient-name" class="control-label">Cliente:</label>
@@ -292,6 +293,7 @@ function rellenar(nro, idclie, nombres, total, saldo, idventa, interes){
   $("#saldo").val( saldo );
   $("#idventa").val( idventa );
   $("#interes").val( sepmiles(interes ));
+  $("#interes_sin").val( interes );
   $("#saldo_interes").val( sepmiles(interes + saldo ));
 }
 
@@ -302,12 +304,13 @@ function validar(){
   let tarj = parseInt($('#tarjeta').val());
   let retencion = parseInt($('#retencion_monto').val());
   let saldo = parseInt($('#saldo').val());
-  let interes = parseInt($('#interes').val());
+  let interes = parseInt($('#interes_sin').val());
+  let cob_int = parseInt($('#cobrar_interes').val())
 
-  if($('#cobrar_interes').val() == 0){
+  if(cob_int == 0){
     sum = efec + cheq + tarj + retencion;
     if (sum > parseInt(saldo)){
-      alert('El monto ingresado es mayor al saldo!');
+      alert('El monto ingresado es mayor al saldo =0');
     }else{
       $('#form_cobros').submit();
     }
@@ -315,8 +318,8 @@ function validar(){
   }else{
 
     sum = efec + cheq + tarj + retencion + interes;
-    if (sum > parseInt(saldo)){
-      alert('El monto ingresado es mayor al saldo!');
+    if (sum > parseInt(saldo + interes)){
+      alert('El monto ingresado es mayor al saldo - no 0');
     }else{
       $('#form_cobros').submit();
     }
