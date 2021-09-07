@@ -38,6 +38,7 @@ if ($_POST['usuario'] != ''){
       $_SESSION['login_idtimb'] = $nca['idtimb'];
       $_SESSION['login_nrocaja'] = $nca['nrocaja'];
       $_SESSION['confgeneral_por2'] = $por2;
+      $_SESSION['lista_facturas'] = [];
 
 
       echo '<script>location.href="cabecera.php";</script>';

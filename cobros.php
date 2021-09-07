@@ -72,7 +72,7 @@ session_start();
           </div>
         </div>
         <div class="card-body">
-          <form method="post" action="">
+          <form method="get" action="">
           <div class="form-group form-row">            
             <div class="col-md-8">
               <label>Cliente</label>
@@ -87,12 +87,19 @@ session_start();
           </div>
           </form>
 
+          <h5><?php echo $_GET['txt_cliente']; ?></h5>
+          <h5>Facturas a cobrar:<?php foreach ($_SESSION['lista_facturas'] as $v) {
+              $part = explode(",", $v);
+             echo $part[0].', '; 
+             } ?>
+          </h5>
+          <button type="button" class="btn btn-info mb-2" data-toggle="modal" data-target="#myModalCobro"> Cobrar </button>
+          
           <table class="table table-bordered table-striped dt-responsive tablas" width="100%">
             <thead>
             
               <tr>
                 <th style="width:5px">Nro</th>                
-                <th>Cliente</th>
                 <th>Fecha</th>                
                 <th>Monto</th>
                 <th>Saldo</th>
@@ -103,40 +110,28 @@ session_start();
 
             <tbody>
             <?php 
-            if($_POST['txt_idclie']){
+            if($_GET['txt_idclie']){
                 // var_dump($_SESSION['login_vendedor']);
-              $sql="SELECT a.idventa, a.nro, a.falta, b.nombres, a.idclie, a.vence, a.exentas+a.grav5+a.grav10+a.iva5+a.iva10 as total FROM vi_cabventas a inner join clientes b on a.idclie=b.idclie where tipofac=2 and a.idclie=".$_POST['txt_idclie']." and a.idvend=".$_SESSION['login_vendedor']. " order by idventa desc limit 10";
+              $sql="SELECT a.idventa, a.nro, a.falta, b.nombres, a.idclie, a.vence, a.saldado, a.exentas+a.grav5+a.grav10+a.iva5+a.iva10 as total FROM vi_cabventas a inner join clientes b on a.idclie=b.idclie where a.tipofac=2 and a.saldado=0 and a.idclie=".$_GET['txt_idclie']." order by idventa desc limit 10";
               //var_dump($sql);
               $consulta=pg_query($con, $sql)or die ("Problemas en consulta ".pg_last_error ());                  
               while($ventas=pg_fetch_array($consulta)){
+                
                 $sql_pagos="SELECT sum(monto - interes) from detcobros where idventa=".$ventas['idventa'];
                 $consulta_pagos=pg_query($con, $sql_pagos)or die ("Problemas en:".pg_last_error ());
                 $sum_pagos=pg_fetch_array($consulta_pagos);
                 if($sum_pagos[0] < $ventas['total']){
                   //saldo pendiente
                   $saldo= $ventas['total'] - $sum_pagos[0];                  
-                  //calcular dias de mora
-                  $hoy=date('Y-m-d');
-                  $date1 = new DateTime($hoy);
-                  $date2 = new DateTime($ventas['vence']);
-                  $dmora = $date1->diff($date2);  
-                  //calculo de interes
-                  if($dmora->days > 5){
-                    $interes = round((($saldo*($_SESSION['confgeneral_por2']/100))/30)*$dmora->days,2);
-                  }else{
-                    $interes = 0;
-                  }
-                  //parametros para llenar campos en cobros
-                  $parametros=" '".$ventas['nro']."', '".$ventas['idclie']."', '".$ventas['nombres']."', ".$ventas['total'].", ".$saldo.", ".$ventas['idventa'].", ".$interes."";
+                  
             ?>
                 <tr>                    
                     <td><?php echo number_format($ventas['nro'], 0, ',', '.'); ?></td>
-                    <td><?php echo $ventas['nombres']; ?></td>
                     <td><?php echo $ventas['falta']; ?></td>                    
                     <td><?php echo number_format($ventas['total'], 0, ',', '.'); ?></td>
                     <td><?php echo number_format($saldo, 0, ',', '.'); ?></td>
                     <td>
-                        <button onclick="rellenar(<?php echo $parametros; ?>);" type="button" data-toggle="modal" data-target="#myModalCobro" class="btn btn-info" >Cobrar</button>
+                        <a href="guardar_cobros.php?txt_cliente= <?php echo $_GET['txt_cliente']; ?>&txt_idclie=<?php echo $_GET['txt_idclie']; ?>&nro=<?php echo $ventas['nro'].','.$ventas['idventa'].','.$saldo; ?>&opcion=1" class="btn btn-info" >Agregar</a>
                     </td>
                 </tr>
             <?php 
@@ -145,7 +140,6 @@ session_start();
             } //end if post  
               else{ ?>
                 <tr>             
-                    <td></td>
                     <td></td>
                     <td></td>
                     <td>Sin Registros</td>
@@ -173,57 +167,25 @@ session_start();
     <div class="modal-content">
 
       <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel">REGISTRAR COBRO</h4>
+        <h4 class="modal-title" id="myModalLabel">Cobrar Facturas Nro:</h4>
       </div>
 
       <div class="modal-body">
-         <form name="form_cobros" id="form_cobros" method="post" action="guardar_cobros.php">
-          <input id="idclie" name="idclie" type="hidden"  />
-          <input id="idventa" name="idventa" type="hidden"  />
-          <input id="saldo" name="saldo" type="hidden"  />
-          <input id="interes_sin" name="interes_sin" type="hidden"  />
-
-          <div class="form-group">
-            <label for="recipient-name" class="control-label">Cliente:</label>
-            <input type="text" class="form-control" id="cliente" name="cliente" disabled >
-            <div class="form-row">
-              <div class="form-group col-md-4">
-                <label for="recipient-name" class="control-label">Nro Factura:</label>
-                <input type="text" class="form-control" id="nro" name="nro" disabled>
-              </div>
-              <div class="form-group col-md-4">
-                <label for="recipient-name" class="control-label">Monto de Factura:</label>
-                <input type="text" class="form-control" id="montof" name="montof" disabled>
-              </div>
-              <div class="form-group col-md-4">
-                <label for="recipient-name" class="control-label">Saldo Pendiente:</label>
-                <input type="text" class="form-control" id="saldof" name="saldof" disabled>
-              </div>
-            </div>
-            
-            <div class="form-row">
-              <div class="form-group col-md-4">
-                <label for="recipient-name" class="control-label">Interes:</label>
-                <input type="text" class="form-control" id="interes" name="interes" disabled>
-              </div>
-              <div class="form-group col-md-4">
-                <label for="recipient-name" class="control-label">Saldo + Interes:</label>
-                <input type="text" class="form-control" id="saldo_interes" name="saldo_interes" disabled>
-              </div>
-              <div class="form-group col-md-4">
-                <label for="recipient-name" class="control-label">Cobrar Interes:</label>
-                <select class="form-control" id="cobrar_interes" name="cobrar_interes">
-                  <option value="0" selected>NO Cobrar</option>
-                  <option value="1" >SI Cobrar</option>
-                </select>
-              </div>
-              
-            </div>
-            
-
-            <label for="recipient-name" class="control-label">Nro Recibo:</label>
-            <input type="text" class="form-control" id="recibo" name="recibo" require>            
-            
+      <?php 
+        $sum_saldo=0;
+        foreach ($_SESSION['lista_facturas'] as $v) {
+          $part = explode(",", $v);
+          //echo $part[0].'-'.$part[1].'-'.$part[2].'---';
+           echo '<strong>'.$part[0].'<strong>  <a href="guardar_cobros.php?txt_cliente= '.$_GET['txt_cliente'].'&txt_idclie='.$_GET['txt_idclie'].'&nro='.$v.'&opcion=2" class="btn btn-danger" >Eliminar</a>, '; 
+          $sum_saldo = $sum_saldo + $part[2];
+         } 
+      ?>
+      <h4 class="my-2">Suma de saldos de facturas: <?php echo number_format($sum_saldo, 0, ',', '.'); ?></h4>
+         <form name="form_cobros" id="form_cobros" method="post" action="guardar_cobros.php?opcion=3">
+          <input id="idclie" name="idclie" type="hidden" value="<?php echo $_GET['txt_idclie']; ?>" />
+          <input id="saldos" name="saldos" type="hidden" value="<?php echo $sum_saldo; ?>" />
+          
+          <div class="form-group">  
             <div class="form-row">
               <div class="form-group col-md-4">
                 <label for="inputEmail4">Efectivo</label>
@@ -284,45 +246,19 @@ session_start();
 <script type="text/javascript"> 
 function sepmiles(x) { return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."); }
 
-function rellenar(nro, idclie, nombres, total, saldo, idventa, interes){
-  $("#idclie").val( idclie );
-  $("#cliente").val( nombres );
-  $("#nro").val( nro );
-  $("#montof").val( sepmiles(total ));
-  $("#saldof").val( sepmiles(saldo ));
-  $("#saldo").val( saldo );
-  $("#idventa").val( idventa );
-  $("#interes").val( sepmiles(interes ));
-  $("#interes_sin").val( interes );
-  $("#saldo_interes").val( sepmiles(interes + saldo ));
-}
-
 function validar(){
   let sum = 0;
   let efec = parseInt($('#efectivo').val());
   let cheq = parseInt($('#cheque').val());
   let tarj = parseInt($('#tarjeta').val());
   let retencion = parseInt($('#retencion_monto').val());
-  let saldo = parseInt($('#saldo').val());
-  let interes = parseInt($('#interes_sin').val());
-  let cob_int = parseInt($('#cobrar_interes').val())
+  let saldos = parseInt($('#saldos').val());
 
-  if(cob_int == 0){
-    sum = efec + cheq + tarj + retencion;
-    if (sum > parseInt(saldo)){
-      alert('El monto ingresado es mayor al saldo =0');
-    }else{
-      $('#form_cobros').submit();
-    }
-  
+  sum = efec + cheq + tarj + retencion;
+  if (sum > parseInt(saldos)){
+    alert('El monto ingresado es mayor a la suma de saldos!');
   }else{
-
-    sum = efec + cheq + tarj + retencion + interes;
-    if (sum > parseInt(saldo + interes)){
-      alert('El monto ingresado es mayor al saldo - no 0');
-    }else{
-      $('#form_cobros').submit();
-    }
+    $('#form_cobros').submit();
   }
 }
 
