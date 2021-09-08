@@ -122,7 +122,7 @@
           </ul>
 
         </li>
-                <!--=======================
+        <!--=======================
             MENU UTILS  
         ========================-->
         <li class="nav-item has-treeview">
@@ -147,7 +147,7 @@
         ========================-->
 
         <li class="nav-item">
-          <a href="cobros.php" class="nav-link">
+          <a href="cobros-cabecera.php" class="nav-link">
             <i class="nav-icon fas fa-cash-register"></i>
             <p> Cobros<i class="right fas fa-angle-left"></i> </p>
           </a>
