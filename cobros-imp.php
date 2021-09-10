@@ -2,7 +2,7 @@
 @session_start();
 include('_conexion.php'); 
 
-	$sqlcab="SELECT idclie, nro, falta, idcaja, efectivo, (cheque+chequead) as cheque, girost, depoban FROM cabcobros WHERE idcobro=".$_GET["identificador"];
+	$sqlcab="SELECT idclie, nro, falta, idcaja, efectivo, (cheque+chequead) as cheque, girost, depoban, tipo as punto FROM cabcobros WHERE idcobro=".$_GET["identificador"];
 	$cab = pg_query ($con, $sqlcab) or die ("Problemas en $-campos cabecera:".pg_last_error ());
 	$cb=pg_fetch_array($cab);
 	
@@ -58,11 +58,11 @@ function imprimir(){
     <tr>
     	<td colspan="4" style="font-size:9px; text-align:center;">Recibo de dinero
             
-        N°:<?php echo $suc[0] ?>-<?php echo $nca[0] ?>-<?php echo $nroini.$cb["nro"] ?></td>
+        N°:<?php echo $cb['punto'] ?>-<?php echo $nroini.$cb["nro"] ?></td>
     </tr>
 	<tr>
-    	<th width="176">Fact. N°</th>
-    	<th width="176">Monto Pago</th>
+    	<th width="176" style="text-align:right;">Fact. N°</th>
+    	<th width="176" style="text-align:right;">Monto Pago</th>
     </tr>
 	<?php 
 	$tot=0;
@@ -73,8 +73,8 @@ function imprimir(){
 		$total_cobro=$total_cobro+$dt['monto'];
 		?>
 			<tr>
-				<td width="176"><?php echo $dt['punto']."-".$dt['nro'];?></td>
-				<td width="176"><?php echo number_format($dt['monto'], 0, ',', '.'); ?></td>
+				<td width="176"  style="text-align:right;"><?php echo $dt['punto']."-".$dt['nro'];?></td>
+				<td width="176"  style="text-align:right;"><?php echo number_format($dt['monto'], 0, ',', '.'); ?></td>
 			</tr>	
 		<?php 
 	}

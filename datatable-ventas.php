@@ -17,7 +17,7 @@ include('_conexion.php');
                 }else{
                     $tipofac = 'CREDITO';
                 }
-
+                $total = "<td style='text-align:right'>".number_format($ventas['total'], 0, ',', '.')."</td>";
                 $datosJson .= '[
                     "' . ($i) . '",
                     "' . $ventas["idventa"] . '",
@@ -26,7 +26,7 @@ include('_conexion.php');
                     "' . $tipofac . '",
                     "' . $ventas["falta"] . '",
                     "' . $ventas["nombres"] . '",
-                    "' . $ventas["total"] . '",
+                    "' . $total . '",
                     "' . $botones . '"
                 ],';
                 $i=$i+1;
