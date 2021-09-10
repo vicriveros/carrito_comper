@@ -49,6 +49,10 @@
   <script src="plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
   <script src="plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
   <script src="plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+  <!-- AdminLTE App -->
+  <script src="dist/js/adminlte.min.js"></script>
+  <!-- AdminLTE for demo purposes -->
+  <script src="dist/js/demo.js"></script>
     <!-- AJAX -->
   <script type="text/javascript" src="libs/ajax.js"></script>
 
@@ -136,7 +140,6 @@
                   <thead>
                   
                     <tr>
-                      <th style="width:5px">ID</th>
                       <th style="width:5px">Nro</th>                
                       <th>Fecha</th>                
                       <th>Monto</th>
