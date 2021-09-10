@@ -14,11 +14,17 @@ include('_conexion.php');
                 "data": [';
     
                 while($ventas=pg_fetch_array($consulta)){
+                    //cobros
                     $sql_pagos="SELECT sum(monto - interes) from detcobros where idventa=".$ventas['idventa'];
                     $consulta_pagos=pg_query($con, $sql_pagos)or die ("Problemas en:".pg_last_error ());
                     $sum_pagos=pg_fetch_array($consulta_pagos);
+                    //nota de credito
+                    $sql_ncc="SELECT sum(exentas+grav5+grav10+iva5+iva10) from vi_cabnccli where idventa=".$ventas['idventa'];
+                    $consulta_ncc=pg_query($con, $sql_ncc)or die ("Problemas en:".pg_last_error ());
+                    $sum_ncc=pg_fetch_array($consulta_pagos);
                     //saldo pendiente
-                    $saldo= $ventas['total'] - $sum_pagos[0];
+                    $saldo= $ventas['total'] - $sum_pagos[0] - $sum_ncc[0];
+                    
                     $parametros = $ventas["idventa"].",".$ventas["nro"].",'".$ventas["falta"]."',".$ventas["total"].",".$saldo;
                     if($saldo>0){
                         $ingresa=1;
