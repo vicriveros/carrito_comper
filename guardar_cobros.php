@@ -60,6 +60,8 @@ foreach($_SESSION['detcobros'] as $k => $detalle){
         }    
 }
 unset($_SESSION['detcobros']);
-echo '<script>location.href="cobros-cabecera.php?ok=1";</script>';
-}  
+//echo '<script>location.href="cobros-cabecera.php?ok=1";</script>';
+echo '<script>location.href="cobros-redir.php?id='.$nextid.'";</script>';
+} 
+
 ?>
