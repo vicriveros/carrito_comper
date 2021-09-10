@@ -5,45 +5,41 @@ include('_conexion.php');
 <table class="table table-hover text-nowrap">
   <thead>
     <tr>
-      <th>Codigo</th>
-      <th>Descripci&oacute;n</th>
-      <th>Cant.</th>
-      <th>Precio</th>
-      <th>Total</th>
-      <th></th>
-    </tr>
+    <th style="width:5px">Nro</th>                           
+    <th>Monto</th>
+    <th>Saldo</th>
+    <th>Pagar</th>
+    <th>Acciones</th>
+  </tr>
   </thead>
   <tbody >
     <?php 
-        if(count($_SESSION['detalle'])>0){
-          foreach($_SESSION['detalle'] as $k => $detalle){ ?>
+        if(count($_SESSION['detcobros'])>0){
+          foreach($_SESSION['detcobros'] as $k => $detalle){ ?>
           <tr>
-            <td style="text-align:right"><?php echo $detalle['codigo'];?></td>
-            <td style="text-align:left"><?php echo $detalle['producto'];?></td>
-            <td style="text-align:right"><?php echo $detalle['cantidad'];?></td>
-            <td style="text-align:right"><?php echo number_format($detalle['precio'], 0, ',', '.');?></td>
-            <td style="text-align:right"><?php echo number_format($detalle['total'], 0, ',', '.');?></td>
+            <td><?php echo $detalle['nro'];?></td>
+            <td><?php echo number_format($detalle['total'], 0, ',', '.');?></td>
+            <td><?php echo number_format($detalle['saldo'], 0, ',', '.');?></td>
+            <td><?php echo number_format($detalle['pagar'], 0, ',', '.');?></td>
             <td>
-              <button type="button" class="btn btn-sm btn-warning edit-art" data-toggle="modal" data-target="#editarModal<?php echo $detalle['idart'];?>" id="<?php echo $detalle['idart'];?>">Editar</button>
-              <button type="button" class="btn btn-sm btn-danger eliminar-producto" id="<?php echo $detalle['id'];?>">Eliminar</button>
+              <button type="button" class="btn btn-sm btn-warning edit-factura" data-toggle="modal" data-target="#editarModal<?php echo $detalle['idventa'];?>" id="<?php echo $detalle['idventa'];?>">Editar</button>
+              <button onclick="eliminar_factura(<?php echo $detalle['id'];?>)" type="button" class="btn btn-sm btn-danger eliminar-factura">Eliminar</button>
             </td>
           </tr>
         <?php }
         }else{?>
-        <tr><td colspan="7"> No hay productos agregados </td></tr>
+        <tr><td colspan="5"> No hay facturas agregadas </td></tr>
     <?php }?>
   </tbody>
 </table>
 	
 <?php
-  if(count($_SESSION['detalle'])>0){
-    foreach($_SESSION['detalle'] as $k => $detalle){ 
-    $datos = pg_query ($con, "SELECT precio, precio2, precio3, precio4 FROM articulos WHERE idart='".$detalle['idart']."'") 
-      or die ("Problemas:".pg_last_error ());
-    $dt=pg_fetch_array($datos);
+  if(count($_SESSION['detcobros'])>0){
+    foreach($_SESSION['detcobros'] as $k => $detalle){ 
+    
 ?>
 <!-- EDITAR -->
-<div class="modal fade" id="editarModal<?php echo $detalle['idart']?>" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+<div class="modal fade" id="editarModal<?php echo $detalle['idventa']?>" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
 
@@ -54,31 +50,15 @@ include('_conexion.php');
 
       <div class="modal-body">
 		<div class="form-row">
-			<input type="hidden" id="editar_id<?php echo $detalle['idart']?>" value="<?php echo $detalle['id'];?>">
-			<input type="hidden" id="editar_articulo<?php echo $detalle['idart']?>" value="<?php echo $detalle['idart'];?>">
-			<input type="hidden" id="editar_producto<?php echo $detalle['idart']?>" value="<?php echo $detalle['producto'];?>">
-			<input type="hidden" id="editar_codigo<?php echo $detalle['idart']?>" value="<?php echo $detalle['codigo'];?>">
+			<input type="hidden" id="editar_id<?php echo $detalle['idventa']?>" value="<?php echo $detalle['id'];?>">
+			<input type="hidden" id="editar_idventa<?php echo $detalle['idventa']?>" value="<?php echo $detalle['idventa'];?>">
+			<input type="hidden" id="editar_nro<?php echo $detalle['idventa']?>" value="<?php echo $detalle['nro'];?>">
+			<input type="hidden" id="editar_total<?php echo $detalle['idventa']?>" value="<?php echo $detalle['total'];?>">
+      <input type="hidden" id="editar_saldo<?php echo $detalle['idventa']?>" value="<?php echo $detalle['saldo'];?>">
 			<div class="editarArt"> 
         <div class="form-group col-md-12">
-          <strong>Cantidad:</strong>
-          <input id="editar_cantidad<?php echo $detalle['idart']?>" name="editar_cantidad" type="text" class="col-md-10 form-control" style="font-size:18px;" value='<?php echo $detalle['cantidad'];?>'/>
-        </div>
-
-        <div class="form-group col-md-12">
-          <div><strong>Precio:</strong>
-            <select id="editar_precio<?php echo $detalle['idart']?>" name="editar_precio" class="col-md-10 form-control">
-                  <?php if($dt['precio']>0){echo '<option value="'.$dt['precio'].'">Precio 1 -'. number_format($dt['precio'], 0, ",", ".").'</option>';};?>
-                  <option value="<?php echo $dt['precio2']; ?>" selected>Precio 2 - <?php echo number_format($dt['precio2'], 0, ',', '.'); ?></option>
-                  <?php if($dt['precio3']>0){echo '<option value="'.$dt['precio3'].'">Precio 3 -'. number_format($dt['precio3'], 0, ",", ".").'</option>';};?>
-                  <?php if($dt['precio4']>0){echo '<option value="'.$dt['precio4'].'">Precio 4 -'. number_format($dt['precio4'], 0, ",", ".").'</option>';};?>
-            </select>
-            
-          </div>
-        </div>
-
-        <div class="form-group col-md-12">
-          <strong>Descuento:</strong>
-          <input id="editar_descuento<?php echo $detalle['idart']?>" placeholder="Descuento" type="text" class="col-md-10 form-control" value="0" style="font-size:18px;" />
+          <strong>Pagar:</strong>
+          <input id="editar_pagar<?php echo $detalle['idventa']?>" name="editar_pagar" type="text" class="col-md-10 form-control" style="font-size:18px;" value='<?php echo $detalle['pagar'];?>'/>
         </div>
 
 			</div> <!-- edit art -->
@@ -87,7 +67,7 @@ include('_conexion.php');
 
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-        <button type="button" data-dismiss="modal" class="btn btn-success guardar-edicion" id="<?php echo $detalle['idart'];?>">Guardar</button>
+        <button onclick="actualizar_monto(<?php echo $detalle['idventa'];?>)" type="button" data-dismiss="modal" class="btn btn-success" >Guardar</button>
       </div>
     </div>
   </div>

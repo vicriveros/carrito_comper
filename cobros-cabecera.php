@@ -32,14 +32,26 @@
   <link rel="stylesheet" href="dist/css/adminlte.min.css">
   <!-- Google Font: Source Sans Pro -->
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+  <!-- jQuery -->
+<script src="plugins/jquery/jquery.min.js"></script>
+  <!-- Bootstrap 4 -->
+<script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- JQuery UI -->
-    <script src="plugins/jquery/jquery.min.js"></script>
-  <script src="plugins/jquery-ui/jquery-ui.js"></script>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <!-- Alertity -->
+  <link rel="stylesheet" href="libs/js/alertify/themes/alertify.core.css" />
+  <link rel="stylesheet" href="libs/js/alertify/themes/alertify.bootstrap.css" id="toggleCSS" />
+  <script src="libs/js/alertify/lib/alertify.min.js"></script>
     <!-- DataTables -->
   <script src="plugins/datatables/jquery.dataTables.min.js"></script>
   <script src="plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
   <script src="plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
   <script src="plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <!-- AJAX -->
+  <script type="text/javascript" src="libs/ajax.js"></script>
+
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
@@ -71,10 +83,22 @@
 
     <!-- Main content -->
     <section class="content">
+    <?php if($_GET['ok']){ ?>
+    <div class="row justify-content-md-center">
+      <div class="col-8 my-2">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <strong> Recibo guardado correctamente! </strong>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <?php } ?>
       <div class="container-fluid">
         <div class="row">
           <!-- left column -->
-          <div class="col-md-6">
+          <div class="col-sm-8">
             <!-- general form elements -->
             <div class="card card-primary">
               <div class="card-header">
@@ -133,32 +157,40 @@
                 <h3 class="card-title">Facturas a cobrar</h3>
 
                 <div class="card-tools" id="montoVisor">
-                  <?php  include('total.php'); ?>
+                  <?php  include('cobros-total.php'); ?>
                 </div>
               </div>
               <!-- /.card-header -->
-              <div class="card-body table-responsive p-0 detalle-producto">
+              <div class="card-body table-responsive p-0 lista-facturas">
                 <table class="table table-hover text-nowrap">
                   <thead>
                     <tr>
-                      <th style="width:5px">Nro</th>                
-                      <th>Fecha</th>                
+                      <th style="width:5px">Nro</th>                              
                       <th>Monto</th>
                       <th>Saldo</th>
+                      <th>Pagar</th>
                       <th>Acciones</th>
                     </tr>
                   </thead>
-                  <tbody>
-
-                        <tr>                    
-                            <td colspan=5>NO HA SELECCIONADO FACTURAS</td>
-                            <td>
-                                <a href="#" class="btn btn-info" >Total</a>
-                                <a href="#" class="btn btn-warning" >Parcial</a>
-                            </td>
-                        </tr>
-
-                    </tbody>
+                  <tbody >
+                  <?php 
+                    if(count($_SESSION['detcobros'])>0){
+                      foreach($_SESSION['detcobros'] as $k => $detalle){ ?>
+                      <tr>
+                        <td><?php echo $detalle['nro'];?></td>
+                        <td><?php echo number_format($detalle['total'], 0, ',', '.');?></td>
+                        <td><?php echo number_format($detalle['saldo'], 0, ',', '.');?></td>
+                        <td><?php echo number_format($detalle['pagar'], 0, ',', '.');?></td>
+                        <td>
+                          <button type="button" class="btn btn-sm btn-warning edit-factura" data-toggle="modal" data-target="#editarModal<?php echo $detalle['idventa'];?>" id="<?php echo $detalle['idventa'];?>">Editar</button>
+                          <button onclick="eliminar_factura(<?php echo $detalle['id'];?>)" type="button" class="btn btn-sm btn-danger eliminar-factura">Eliminar</button>
+                        </td>
+                      </tr>
+                    <?php }
+                    }else{?>
+                    <tr><td colspan="5"> No hay facturas agregadas </td></tr>
+                <?php }?>
+                  </tbody>
                 </table>
               </div>
               <!-- /.card-body -->
@@ -179,76 +211,71 @@
       </div>
 
       <div class="modal-body">
+        <form name="form_cobros" id="form_cobros" method="post" action="guardar_cobros.php?opcion=3">
         <div class="row" id="montoc">
-            <?php 
-      include('total.php');
-        ?>
-    </div>
-            <form id="formGuardar" method="post" action="confirmar.php">
-            
-      <input id="confir" name="confir" type="hidden" value="1" />
-
-      <input id="txt_caja" name="txt_caja" type="hidden" value="<?php echo $_SESSION['login_idcaja']; ?>" />
-      <input id="txt_deposito" name="txt_deposito" type="hidden" value="1" />
-      <input id="txt_idclie" name="txt_idclie" type="hidden"  />
-      <input id="tipovta" name="tipovta" type="hidden"  />
-      <input id="plazo" name="plazo" type="hidden"  />
-      
+            <?php include('total.php'); ?>
+        </div>
     
-    <div class="row">
-      <div id="metodo-pago">
+        <input id="txt_idclie" name="txt_idclie" type="hidden" />
+      
+    <div class="form-group">  
+      
+      <div class="form-row">
+        <p style="font-size:18px; margin-top:30px;"><strong>Datos del Cliente:</strong></p>
+        <div class="form-group col-md-10">
+          <strong>Nombre:</strong>
+          <input id="txt_nombre" name="txt_nombre" type="text" class="form-control" style="font-size:18px;" disable="disable"/>
+        </div>
+        <div class="form-group col-md-10">
+          <strong>RUC:</strong>
+          <input id="txt_ruc" name="txt_ruc" type="text" class=" form-control" style="font-size:18px;" disable="disable"/>
+        </div>
+      </div>
+
       <div class="form-row">
         <div class="form-group col-md-4">
-            <label for="inputEmail4">Efectivo</label>
-            <input type="number" class="form-control" name="efectivo" id="efectivo" value="0">
-          </div>
-          <div class="form-group col-md-4">
-            <label for="inputPassword4">Cheque</label>
-            <input type="number" class="form-control" name="cheque" id="cheque" value="0">
-          </div>
-          <div class="form-group col-md-4">
-            <label for="inputPassword4">Tarjeta</label>
-            <input type="number" class="form-control" name="tarjeta" id="tarjeta" value="0">
-          </div>
+          <label for="inputEmail4">Efectivo</label>
+          <input type="number" class="form-control" name="efectivo" id="efectivo" value="0">
+        </div>
+        <div class="form-group col-md-4">
+          <label for="inputPassword4">Cheque</label>
+          <input type="number" class="form-control" name="cheque" id="cheque" value="0">
+        </div>
+        <div class="form-group col-md-4">
+          <label for="inputPassword4">Tarjeta</label>
+          <input type="number" class="form-control" name="tarjeta" id="tarjeta" value="0">
+        </div>
       </div>
 
       <div class="form-row">
         <div class="form-group col-md-4">
-            <label for="inputEmail4">Cheque Ad</label>
-            <input type="number" class="form-control" name="chequead" id="chequead"  value="0">
-          </div>
-          <div class="form-group col-md-4">
-            <label for="inputPassword4">Giros Tigo</label>
-            <input type="number" class="form-control" name="giros" id="giros" value="0">
-          </div>
-          <div class="form-group col-md-4">
-            <label for="inputPassword4">Deposito Bancario</label>
-            <input type="number" class="form-control" name="depositoban" id="depositoban" value="0">
-          </div>
+          <label for="inputEmail4">Retencion Nro</label>
+          <input type="text" class="form-control" name="retencion_nro" id="retencion_nro" value="0">
+        </div>
+        <div class="form-group col-md-4">
+          <label for="inputPassword4">Retencion Fecha</label>
+          <input type="date" class="form-control" name="retencion_fecha" id="retencion_fecha" value="0">
+        </div>
+        <div class="form-group col-md-4">
+          <label for="inputPassword4">Retencion Monto</label>
+          <input type="number" class="form-control" name="retencion_monto" id="retencion_monto" value="0">
+        </div>
       </div>
-      </div> <!-- fin metodo pago -->
+    
+    </div> <!-- form group -->
 
-    <div class="form-row">
-      <p style="font-size:18px; margin-top:30px;"><strong>Datos del Cliente:</strong></p>
-      <div class="form-group col-md-10">
-        <strong>Nombre:</strong>
-        <input id="txt_nombre" name="txt_nombre" type="text" class="form-control" style="font-size:18px;" disable="disable"/>
-      </div>
-      <div class="form-group col-md-10">
-        <strong>RUC:</strong>
-        <input id="txt_ruc" name="txt_ruc" type="text" class=" form-control" style="font-size:18px;" disable="disable"/>
-      </div>
+    </div> <!-- modal body -->
+
+     <!-- modal content -->
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      <button onclick="validar()" id="enviar" type="button" class="btn btn-success">Guardar</button>
     </div>
 
-    </div>
-
-      </div>
-
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-        <button onclick="javascript:validar()" type="button" class="btn btn-success">Guardar</button>
-      </form></div>
-    </div>
+    </form>
+    
+  </div>
   </div>
 </div><!-- </ COBRAR -->
 
@@ -273,38 +300,6 @@
 <!-- ./wrapper -->
 
 
-
-<?php 
-  if (empty($_SESSION['login_user'])) {
-    echo '<script>location.href="index.php";</script>';
-  }
-  
-if ($_GET['clie_id']) {
-  echo'
-  <script>
-    $(document).ready(function(){ 
-      $("#txt_idclie").val( "'.$_GET['clie_id'].'" );
-      $("#txt_cliente").val("'.$dtcp[nombres].' | '.$dtcp[barrio].' | '.$dtcp[ruc].'");
-      $("#txt_nombre").val("'.$dtcp[nombres].'");
-      $("#txt_ruc").val("'.$dtcp[ruc].'");
-
-      $("#nombre").val("'.$dtcp[nombres].'");
-      $("#ruc").val("'.$dtcp[ruc].'");
-      $("#direccion").val("'.$dtcp[direccion].'");
-      $("#telefono").val("'.$dtcp[telefono].'");
-      $("#ubicacion").val("'.$dtcp[ubicacion].'");
-      $("#barrio").val("'.$dtcp[barrio].'");
-    });
-  </script>
-  ';
-}else{
-  echo 
-  '  <script>
-
-</script>';
-}
-?>
-
 <script type="text/javascript">   
     $(function(){
     //validacion de tipo de venta
@@ -326,13 +321,6 @@ if ($_GET['clie_id']) {
       $("#txt_cliente").val(mostrar);
       $("#txt_nombre").val(porcion[0]);
       $("#txt_ruc").val(porcion[1]);
-
-      $("#nombre").val(porcion[0]);
-      $("#barrio").val(porcion[1]);
-      $("#ruc").val(porcion[2]);
-      $("#direccion").val(porcion[3]);
-      $("#telefono").val(porcion[4]);
-      $("#ubicacion").val(porcion[5]);
       
       $('.tablaListaVentas').DataTable().destroy();
       $(".tablaListaVentas").DataTable({
@@ -384,7 +372,72 @@ if ($_GET['clie_id']) {
       $("#txt_ruc").val(porcion[1]);
       event.preventDefault();
     }
+
+  function agregar_factura(idventa, nro, total, saldo){
+	$.ajax({
+	  url: 'Controller/CobrosController.php?page=1',
+	  type: 'post',
+	  data: {'idventa':idventa, 'nro':nro, 'total':total, 'saldo':saldo},
+	  dataType: 'json'
+	}).done(function(data){
+	  if(data.success==true){
+		alertify.success(data.msj);
+		$(".lista-facturas").load('cobros-detalle.php');
+		$("#montoc").load('cobros-total.php');
+		$("#montoVisor").load('cobros-total.php');
+	  }else{
+		alertify.error(data.msj);
+	  }
+	})
+	}
+
+  function eliminar_factura(id){
+	$.ajax({
+		  url: 'Controller/CobrosController.php?page=2',
+		  type: 'post',
+		  data: {'id':id},
+		  dataType: 'json'
+	}).done(function(data){
+	  if(data.success==true){
+		alertify.success(data.msj);
+		$(".lista-facturas").load('cobros-detalle.php');
+		$("#montoc").load('cobros-total.php');
+		$("#montoVisor").load('cobros-total.php');
+	  }else{
+		alertify.error(data.msj);
+	  }
+	})
+	}
+
+  function actualizar_monto(id){
+    let idcarro = $(`#editar_id${id}`).val();
+		let idventa = $(`#editar_idventa${id}`).val();
+		let nro = $(`#editar_nro${id}`).val();
+		let total = $(`#editar_total${id}`).val();
+		let saldo = parseInt($(`#editar_saldo${id}`).val());
+		let pagar = parseInt($(`#editar_pagar${id}`).val());
+console.log(`saldo: ${saldo} pagar: ${pagar}`)
+    if(pagar > saldo){
+      alert('El monto ingresado es mayor al saldo!');
+    }else{
     
+    $.ajax({
+			url: 'Controller/CobrosController.php?page=3',
+			type: 'post',
+			data: {'idventa':idventa, 'nro':nro, 'total':total, 'saldo':saldo, 'id':idcarro, 'pagar':pagar},
+			dataType: 'json'
+		}).done(function(data){
+			if(data.success==true){
+				alertify.success(data.msj);
+        $(".lista-facturas").load('cobros-detalle.php');
+        $("#montoc").load('cobros-total.php');
+        $("#montoVisor").load('cobros-total.php');
+			}else{
+				alertify.error(data.msj);
+			}
+		}) 
+  }//validacion
+  }
 
     function sepmiles(x) { return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."); }
 
@@ -396,18 +449,21 @@ if ($_GET['clie_id']) {
       $("#formGuardar").submit()
     }
 
-    function validar(){
-      if($("#txt_venta").val() == 2){
-        enviar();
-      }else{
-        let tot = parseInt($("#txt_tot").val());
-        let sum = parseInt($("#efectivo").val()) + parseInt($("#cheque").val()) + parseInt($("#tarjeta").val()) + parseInt($("#chequead").val()) + parseInt($("#giros").val()) + parseInt($("#depositoban").val());
+function validar(){
+  let sum = 0;
+  let efec = parseInt($('#efectivo').val());
+  let cheq = parseInt($('#cheque').val());
+  let tarj = parseInt($('#tarjeta').val());
+  let retencion = parseInt($('#retencion_monto').val());
+  let saldos = parseInt($('#saldos').val());
 
-        if(sum > tot){ alert('El monto ingresado es mayor al importe total!'); }
-        else if(sum < tot){ alert('El monto ingresado es menor al importe total!');}
-        else{ enviar(); }
-      }
-    } 
+  sum = efec + cheq + tarj + retencion;
+  if (sum > parseInt(saldos)){
+    alert('El monto ingresado es mayor a la suma de saldos!');
+  }else{
+    $('#form_cobros').submit();
+  }
+}
     
 ;
   </script>

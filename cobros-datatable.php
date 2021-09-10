@@ -13,15 +13,22 @@ include('_conexion.php');
                 "data": [';
     
                 while($ventas=pg_fetch_array($consulta)){
+
+                    $sql_pagos="SELECT sum(monto - interes) from detcobros where idventa=".$ventas['idventa'];
+                    $consulta_pagos=pg_query($con, $sql_pagos)or die ("Problemas en:".pg_last_error ());
+                    $sum_pagos=pg_fetch_array($consulta_pagos);
+                    //saldo pendiente
+                    $saldo= $ventas['total'] - $sum_pagos[0];
+                    $parametros = $ventas["idventa"].",".$ventas["nro"].",'".$ventas["falta"]."',".$ventas["total"].",".$saldo;
     
-                        $botones = "<td><a href='#' class='btn btn-info' >Total</a><a href='#' class='btn btn-warning' >Parcial</a></td>";
+                    $botones = "<td> <button type='button' onclick='agregar_factura(".$ventas["idventa"].",".$ventas["nro"].",".$ventas["total"].",".$saldo.")' class='btn btn-info' >Agregar</button> </td>";
     
                         $datosJson .= '[
                             "' . $ventas["idventa"] . '",
                             "' . $ventas["nro"] . '",
                             "' . $ventas["falta"] . '",
                             "' . $ventas["total"] . '",
-                            "' . $ventas["total"] . '",
+                            "' . $saldo . '",
                             "' . $botones . '"
                         ],';
                 }

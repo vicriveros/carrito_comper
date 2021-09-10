@@ -39,7 +39,7 @@ $fecha=date('Y-m-d');
 if($_POST['retencion_fecha'] == ''){$_POST['retencion_fecha']='1900-01-01';}
 
 $insert_cab="insert into cabcobros (idcobro, nro, idcaja, fecha, idclie, ualta, falta, activo, efectivo, cheque, tarjeta, idsucursal, estado, anticip, ccaja, tipo, retnro, retfec, retmon)
- values ('".$nextid."', '".$nextrec."', ".$_SESSION['login_idcaja'].", '".$fecha."', '".$_POST['idclie']."', ".$_SESSION['login_idusu'].", '".$fecha."', 1, '".$_POST['efectivo']."', '".$_POST['cheque']."', '".$_POST['tarjeta']."', ".$_SESSION['login_sucursal'].", 1, 0, 0, '001".$_SESSION['login_nrocaja']."', '".$_POST['retencion_nro']."', '".$_POST['retencion_fecha']."', '".$_POST['retencion_monto']."')";
+ values ('".$nextid."', '".$nextrec."', ".$_SESSION['login_idcaja'].", '".$fecha."', '".$_POST['txt_idclie']."', ".$_SESSION['login_idusu'].", '".$fecha."', 1, '".$_POST['efectivo']."', '".$_POST['cheque']."', '".$_POST['tarjeta']."', ".$_SESSION['login_sucursal'].", 1, 0, 0, '001".$_SESSION['login_nrocaja']."', '".$_POST['retencion_nro']."', '".$_POST['retencion_fecha']."', '".$_POST['retencion_monto']."')";
 $datos = pg_query ($con, $insert_cab) or die ("Problemas en $-campos:".pg_last_error ());
 
 //actualizar next recibo nro
@@ -49,25 +49,17 @@ $recibo = pg_query ($con, $rsql) or die ("Problemas en select:".pg_last_error ()
 
 $montot=$_POST['efectivo'] + $_POST['cheque'] + $_POST['tarjeta'] + $_POST['retencion_monto'];
 
-foreach ($_SESSION['lista_facturas'] as $v) {
-    $part = explode(",", $v);
-    $montot = $montot - $part[2];
+foreach($_SESSION['detcobros'] as $k => $detalle){ 
 
-    if($montot >= 0){
-        $insert_det="insert into detcobros (idcobro, idventa, monto, falta, interes) values ('".$nextid."', '".$part[1]."', '".$part[2]."', '".$fecha."', 0)";
+        $insert_det="insert into detcobros (idcobro, idventa, monto, falta, interes) values ('".$nextid."', '".$detalle['idventa']."', '".$detalle['pagar']."', '".$fecha."', 0)";
         $datos = pg_query ($con, $insert_det) or die ("Problemas en $-campos:".pg_last_error ());
 
-        $ssql="update cabventas set saldado=1 where idventa=".$part[1];
-        $saldado = pg_query ($con, $ssql) or die ("Problemas en select:".pg_last_error ());
-    }else{
-        $monto = $montot + $part[2];
-        $insert_det="insert into detcobros (idcobro, idventa, monto, falta, interes) values ('".$nextid."', '".$part[1]."', '".$monto."', '".$fecha."', 0)";
-        $datos = pg_query ($con, $insert_det) or die ("Problemas en $-campos:".pg_last_error ());
-
-        break;
-    }
+        if($detalle['pagar'] == $detalle['saldo']){
+            $ssql="update cabventas set saldado=1 where idventa=".$detalle['idventa'];
+            $saldado = pg_query ($con, $ssql) or die ("Problemas en select:".pg_last_error ());
+        }    
 }
-unset($_SESSION['lista_facturas']);
-echo '<script>location.href="cobros.php?ok=1";</script>';
+unset($_SESSION['detcobros']);
+echo '<script>location.href="cobros-cabecera.php?ok=1";</script>';
 }  
 ?>
