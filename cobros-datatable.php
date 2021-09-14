@@ -39,12 +39,12 @@ include('_conexion.php');
                                 "' . $botones . '"
                             ],';
                     }
-                    if($ingresa==0){
+                    if($ingresa==0 and $cant==1){
  
                         
                             $datosJson .= '[
-                                " SIN ",
-                                " FACTURAS PENDIENTES ",
+                                "  ",
+                                " SIN FACTURAS PENDIENTES.",
                                 "  ",
                                 "  ",
                                 "  "
@@ -69,8 +69,8 @@ include('_conexion.php');
                 "data": [';
             
                 $datosJson .= '[
-                    " SIN ",
-                    " FACTURAS PENDIENTES ",
+                    "  ",
+                    " SIN FACTURAS PENDIENTES..",
                     "  ",
                     "  ",
                     "  "
@@ -91,8 +91,8 @@ include('_conexion.php');
             "data": [';
         
             $datosJson .= '[
-                " SIN ",
-                " FACTURAS PENDIENTES ",
+                "  ",
+                " SIN FACTURAS PENDIENTES...",
                 "  ",
                 "  ",
                 "  "
