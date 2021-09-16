@@ -22,7 +22,7 @@ include('_conexion.php');
 	$cons3=pg_query($con, $sql3)or die ("Problemas en consulta ".pg_last_error ());
 	$suc=pg_fetch_array($cons3);
 
-	$sqlclie="SELECT nombres, ruc FROM clientes WHERE idclie=". $cb['idclie'];
+	$sqlclie="SELECT a.nombres, ruc, direccion, telefono, b.nombres as ciudad FROM clientes a inner join ciudad b on a.idciudad=b.idciudad WHERE a.idclie=". $cb['idclie'];
 	$clie = pg_query ($con, $sqlclie) or die ("Problemas en $-campos clie:".pg_last_error ());
 	$cl=pg_fetch_array($clie);
 
@@ -127,7 +127,15 @@ function imprimir(){
 	<tr>
     	<td colspan="4" style="text-align:left; height:26px;">RUC/CI: <?php echo $cl['ruc'] ?></td>
     </tr>
-  
+	<tr>
+    	<td colspan="4" style="text-align:left; height:26px;">Telefono: <?php echo $cl['telefono'] ?></td>
+    </tr>  
+	<tr>
+    	<td colspan="4" style="text-align:left; height:26px;">Direccion: <?php echo $cl['direccion'] ?></td>
+    </tr>
+	<tr>
+    	<td colspan="4" style="text-align:left; height:26px;">Ciudad: <?php echo $cl['ciudad'] ?></td>
+    </tr>
 	<tr>
     	<td colspan="4" style="text-align:left; height:26px;"><strong>-- Liquidacion de IVA --</td>
     </tr>

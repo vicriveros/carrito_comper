@@ -1,15 +1,15 @@
 <?php 
 include('_conexion.php');  
     if($_POST['idclie']>0){
-        
-        $sql="SELECT a.idventa, a.timb as punto, a.nro, CAST(a.falta AS date), trim(b.nombres) as nombres, a.tipofac, a.exentas+a.grav5+a.grav10+a.iva5+a.iva10 as total FROM vi_cabventas a inner join clientes b on a.idclie=b.idclie where saldado=0 and tipofac=2 and a.idclie= ".$_POST['idclie']." order by idventa desc";
+//        $sql="SELECT a.idventa, a.timb as punto, a.nro, CAST(a.falta AS date), trim(b.nombres) as nombres, a.tipofac, a.exentas+a.grav5+a.grav10+a.iva5+a.iva10 as total, (SELECT sum(monto - interes) from detcobros where idventa=a.idventa) as cobros, (SELECT sum(exentas+grav5+grav10+iva5+iva10) from vi_cabnccli where idventa=a.idventa) as nc FROM vi_cabventas a inner join clientes b on a.idclie=b.idclie where a.activo=1 and saldado=0 and tipofac=2 and a.idclie= ".$_POST['idclie']." order by idventa desc";
+        $sql="SELECT a.idventa, a.timb as punto, a.nro, CAST(a.falta AS date), trim(b.nombres) as nombres, a.tipofac, a.exentas+a.grav5+a.grav10+a.iva5+a.iva10 as total FROM vi_cabventas a inner join clientes b on a.idclie=b.idclie where a.activo=1 and saldado=0 and tipofac=2 and a.idclie= ".$_POST['idclie']." order by idventa desc";
         $consulta=pg_query($con, $sql)or die ("Problemas en consulta ".pg_last_error ());
         $cant=pg_num_rows($consulta);
-
+//echo $sql;
         if($cant>0){
 
             $ingresa=0;
-
+            $nomas=0;
             $datosJson = '{
                 "data": [';
     
@@ -38,10 +38,9 @@ include('_conexion.php');
                                 "' . $csaldo . '",
                                 "' . $botones . '"
                             ],';
-                    }
-                    if($ingresa==0 and $cant==1){
+                    }else{
  
-                        
+                        if($ingresa==0 and $nomas==0){
                             $datosJson .= '[
                                 "  ",
                                 " SIN FACTURAS PENDIENTES.",
@@ -49,11 +48,12 @@ include('_conexion.php');
                                 "  ",
                                 "  "
                             ],';
-                    
+                            $nomas=1;
+                        };
                     
                     };
 
-            };
+                };
             $datosJson = substr($datosJson, 0, -1);
     
             $datosJson .=   '] 
