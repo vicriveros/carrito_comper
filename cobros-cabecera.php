@@ -442,15 +442,15 @@ console.log(`saldo: ${saldo} pagar: ${pagar}`)
   }//validacion
   }
 
-    function sepmiles(x) { return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."); }
+function sepmiles(x) { return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."); }
 
-    function enviar(){
-      let vta = $("#txt_venta").val();
-      let plazo = $("#txt_plazo").val();
-      $("#tipovta").val(vta);
-      $("#plazo").val(plazo);
-      $("#formGuardar").submit()
-    }
+function enviar(){
+  let vta = $("#txt_venta").val();
+  let plazo = $("#txt_plazo").val();
+  $("#tipovta").val(vta);
+  $("#plazo").val(plazo);
+  $("#formGuardar").submit()
+}
 
 function validar(){
   let sum = 0;

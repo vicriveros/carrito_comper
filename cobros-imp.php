@@ -66,14 +66,14 @@ function imprimir(){
     </tr>
 	<?php 
 	$tot=0;
-	$sqldet="SELECT punto, nro, monto FROM vi_detcobros WHERE idcobro=".$_GET['identificador'];
+	$sqldet="SELECT punto, nrofac, monto FROM vi_detcobros WHERE idcobro=".$_GET['identificador'];
 	$det = pg_query ($con, $sqldet) or die ("Problemas en $-campos detalle1:".pg_last_error ());
 	$total_cobro=0;
 	while($dt=pg_fetch_array($det)){
 		$total_cobro=$total_cobro+$dt['monto'];
 		?>
 			<tr>
-				<td width="176"  style="text-align:right;"><?php echo $dt['punto']."-".$dt['nro'];?></td>
+				<td width="176"  style="text-align:right;"><?php echo $dt['punto']."-".$dt['nrofac'];?></td>
 				<td width="176"  style="text-align:right;"><?php echo number_format($dt['monto'], 0, ',', '.'); ?></td>
 			</tr>	
 		<?php 

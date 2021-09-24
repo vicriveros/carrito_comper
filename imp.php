@@ -2,7 +2,7 @@
 @session_start();
 include('_conexion.php'); 
 
-	$sqlcab="SELECT idclie, nro, falta, idcaja, tipofac, idventa, exentas, grav5, grav10, iva5, iva10 FROM cabventas WHERE idventa=".$_GET["identificador"]." and idcaja=".$_SESSION['login_idcaja'];
+	$sqlcab="SELECT idclie, nro, falta, idcaja, tipofac, idventa, exentas, grav5, grav10, iva5, iva10, idvend FROM cabventas WHERE idventa=".$_GET["identificador"]." and idcaja=".$_SESSION['login_idcaja'];
 	$cab = pg_query ($con, $sqlcab) or die ("Problemas en $-campos cabecera:".pg_last_error ());
 	$cb=pg_fetch_array($cab);
 	
@@ -26,6 +26,9 @@ include('_conexion.php');
 	$clie = pg_query ($con, $sqlclie) or die ("Problemas en $-campos clie:".pg_last_error ());
 	$cl=pg_fetch_array($clie);
 
+	$sqlvende="SELECT nombres FROM vendedores WHERE idvend=". $cb['idvend'];
+	$vende = pg_query ($con, $sqlvende) or die ("Problemas en $-campos vende:".pg_last_error ());
+	$ve=pg_fetch_array($vende);
 ?>
 <HTML>
 <HEAD>
@@ -135,6 +138,9 @@ function imprimir(){
     </tr>
 	<tr>
     	<td colspan="4" style="text-align:left; height:26px;">Ciudad: <?php echo $cl['ciudad'] ?></td>
+    </tr>
+	<tr>
+    	<td colspan="4" style="text-align:left; height:26px;">Vendedor: <?php echo $ve['nombres'] ?></td>
     </tr>
 	<tr>
     	<td colspan="4" style="text-align:left; height:26px;"><strong>-- Liquidacion de IVA --</td>
@@ -254,7 +260,9 @@ if($tipofac==2){
 	<tr>
     	<td colspan="4" style="text-align:left; height:26px;">RUC/CI: '.$cl['ruc'] .'</td>
     </tr>
-  
+	<tr>
+		<td colspan="4" style="text-align:left; height:26px;">RUC/CI: '.$ve['nombres'] .'</td>
+	</tr>
 	<tr>
     	<td colspan="4" style="text-align:left; height:26px;"><strong>-- Liquidacion de IVA --</td>
     </tr>
