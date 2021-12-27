@@ -1,3 +1,32 @@
+function agregar_predeterminados(idart, producto){
+	let cantidad = 25;
+	let codigo = '';
+
+	$.ajax({
+		url: 'Controller/ProductoController.php?page=1',
+		type: 'post',
+		data: {'producto':producto, 'cantidad':cantidad, 'codigo':codigo, 'idart':idart},
+		dataType: 'json'
+	}).done(function(data){
+		if(data.success==true){
+			
+			$("#txt_idart").val('');
+			$("#txt_codigo").val('');
+			$("#txt_cantidad").val('1');
+			$("#txt_producto").val('');
+			$("#txt_producto").focus();
+			alertify.success(data.msj);
+			$(".detalle-producto").load('detalle.php');
+			$("#montoc").load('total.php');
+			$("#montoVisor").load('total.php');
+			
+		}else{
+			$("#txt_producto").focus();
+			alertify.error(data.msj);
+		}
+	})
+};
+
 $(function(){ 
 	$(".btn-agregar-producto").off("click");
 	$(".btn-agregar-producto").on("click", function(e) {

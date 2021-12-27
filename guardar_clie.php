@@ -1,5 +1,5 @@
 <?php 
-include('_conexion.php');
+include('_conexion.php'); 
 //Registrar o actualizar cliente
     //variables POST
       $nombre=$_POST['nombre'];

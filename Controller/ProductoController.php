@@ -15,41 +15,53 @@ switch($page){
 		$json['msj'] = 'Producto Agregado';
 		$json['success'] = true;
 	
-//		if (isset($_POST['producto']) && $_POST['producto']!='' && isset($_POST['cantidad']) && $_POST['cantidad']!='') {
 		if ($_POST['producto']!='' && $_POST['cantidad'] > 0) {
 			$datos = pg_query ($con, "SELECT codfab, precio2 FROM articulos WHERE idart='".$_POST['idart']."'") or die ("Problemas en $-campos:".pg_last_error ());
 				$dt=pg_fetch_array($datos);
 				$precio= $dt["precio2"];
 				$codigo = $dt["codfab"];
-									
 						
-			try {
+			$stock=pg_query ($con, "SELECT cant, idart FROM detstock WHERE idart=".$_POST['idart']." and iddeposito=".$_SESSION['login_deposito']) or die ("Problemas en $-campos:".pg_last_error ());
+				$result=pg_fetch_array($stock);		
+				$cntStock=$result["cant"];
+
 				$cantidad = $_POST['cantidad'];
-				$producto = $_POST['producto'];
-				$idart = $_POST['idart'];
-				$total=$cantidad*$precio;
-				
-				if(count($_SESSION['detalle'])>0){
-					$ultimo = end($_SESSION['detalle']);
-					$count = $ultimo['id']+1;
-				}else{
-					$count = count($_SESSION['detalle'])+1;
+
+			if($cantidad<=$cntStock){
+			
+				try {
+						
+						$producto = $_POST['producto'];
+						$idart = $_POST['idart'];
+						$total=$cantidad*$precio;
+						
+						if(count($_SESSION['detalle'])>0){
+							$ultimo = end($_SESSION['detalle']);
+							$count = $ultimo['id']+1;
+						}else{
+							$count = count($_SESSION['detalle'])+1;
+						}
+						$_SESSION['detalle'][$count] = array('id'=>$count, 'producto'=>$producto, 'cantidad'=>$cantidad, 'codigo'=>$codigo, 'idart'=>$idart, 'precio'=>$precio, 'total'=>$total);
+
+						$json['success'] = true;
+
+						echo json_encode($json);
+
+				}catch (PDOException $e) {
+					$json['msj'] = $e->getMessage();
+					$json['success'] = false;
+					echo json_encode($json);
 				}
-				$_SESSION['detalle'][$count] = array('id'=>$count, 'producto'=>$producto, 'cantidad'=>$cantidad, 'codigo'=>$codigo, 'idart'=>$idart, 'precio'=>$precio, 'total'=>$total);
+			}else{
 
-				$json['success'] = true;
-
-				echo json_encode($json);
-	
-			}catch (PDOException $e) {
-				$json['msj'] = $e->getMessage();
+				$json['msj'] = 'La cantidad cargada supera el stock disponible';
 				$json['success'] = false;
 				echo json_encode($json);
+
 			}
 		}else{
 				if ($_POST['codigo']!='' && $_POST['cantidad'] > 0) {
 					$datos = pg_query ($con, "SELECT nombres, idart, codfab, precio FROM articulos WHERE codfab='".$_POST['codigo']."'") or die ("Problemas en $-campos:".pg_last_error ());
-
 					
 					$row=pg_num_rows($datos);
 					if ($row>0){
@@ -120,9 +132,17 @@ switch($page){
 		$json['msj'] = 'Producto Editado';
 		$json['success'] = true;
 	
-		try{
+		$stock=pg_query ($con, "SELECT cant, idart FROM detstock WHERE idart=".$_POST['idart']." and iddeposito=".$_SESSION['login_deposito']) or die ("Problemas en $-campos:".pg_last_error ());
+		$result=pg_fetch_array($stock);		
+		$cntStock=$result["cant"];
 
-					$cantidad = $_POST['cantidad'];
+		$cantidad = $_POST['cantidad'];
+
+		if($cantidad<=$cntStock){
+
+			try{
+
+					// $cantidad = $_POST['cantidad'];
 					$codigo = $_POST['codigo'];
 					$producto = $_POST['producto'];
 					$idart = $_POST['idart'];
@@ -148,6 +168,14 @@ switch($page){
 					$json['success'] = false;
 					echo json_encode($json);
 					}
+
+		}else{
+
+			$json['msj'] = 'La cantidad cargada supera el stock disponible';
+			$json['success'] = false;
+			echo json_encode($json);
+
+		}
 		break;
 
 

@@ -3,7 +3,7 @@
 if ($_GET["term"]){
 
 $criterio = strtoupper($_GET["term"]);
-$sql="SELECT nombres, idclie, ruc, barrio, direccion, telefono, ubicacion FROM clientes WHERE nombres LIKE '%".$criterio."%' or barrio LIKE '%".$criterio."%' or ruc LIKE '%".$criterio."%'";
+$sql="SELECT nombres, idclie, ruc, barrio, direccion, telefono, ubicacion FROM clientes WHERE activo=1 and nombres LIKE '%".$criterio."%' or barrio LIKE '%".$criterio."%' or ruc LIKE '%".$criterio."%'";
 $datos = pg_query ($con, $sql) or die ("Problemas en $-campos:".pg_last_error ());
 
 $contador = 0;

@@ -53,6 +53,9 @@ function imprimir(){
     	<td colspan="4" style="font-size:9px; text-align:center;">de Victor G. Perez Velázquez </td>
     </tr>
 	<tr>
+    	<td colspan="4" style="font-size:9px; text-align:center; ">Comercio al por mayor de otros productos N.C.P. </td>
+    </tr>
+	<tr>
     	<td colspan="4" style="font-size:9px; text-align:center; ">Comercio al por menor de otros productos en comercio no especializados </td>
     </tr>
     <tr>
@@ -247,7 +250,6 @@ if($tipofac==2){
 	<tr>
     	<td colspan="4" width="176" style="text-align:left; font-size:22px; font-family:Arial;"><strong>Total:</strong> '. number_format($tot, 0, ',', '.') .'</td>
     </tr>
-
  	<tr>
     	<td colspan="4" style="text-align:left; height:26px;">&nbsp;</td>
     </tr>

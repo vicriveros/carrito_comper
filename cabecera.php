@@ -132,6 +132,26 @@
                 <div class="card-footer">
                   <button type="button" class="btn btn-success btn-agregar-producto">Agregar al Carrito</button>
                 </div>
+
+              
+            </div>
+            <div class="card card-info">
+              <div class="card-header">
+                <h3 class="card-title">Articulos Predeterminados</h3>
+              </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+              
+                <div class="card-body">
+                  <button type="button" class="btn btn-info" onclick="agregar_predeterminados('1', 'OCB PREMIUM')">OCB PREMIUM</button>
+                  <button type="button" class="btn btn-info" onclick="agregar_predeterminados('3', 'OCB VIRGIN')">OCB VIRGIN</button>
+                  <button type="button" class="btn btn-info" onclick="agregar_predeterminados('2', 'OCB ORGANICO')">OCB ORGANICO</button>
+                  <button type="button" class="btn btn-info" onclick="agregar_predeterminados('4', 'OCB XPERT')">OCB XPERT</button>
+                  <button type="button" class="btn btn-info" onclick="agregar_predeterminados('6', 'OCB ULTIMATE')">OCB ULTIMATE</button>
+                  <button type="button" class="btn btn-info" onclick="agregar_predeterminados('5', 'OCB BLANCO')">OCB BLANCO</button>
+                  <button type="button" class="btn btn-info" onclick="agregar_predeterminados('13', 'OCB SLIM PREMIUM')">OCB SLIM PREMIUM</button>
+                </div>
+
               
             </div>
             <!-- /.card -->
@@ -326,6 +346,8 @@
   </aside>
   <!-- /.control-sidebar -->
 </div>
+<!-- FIN REGISTRAR CLIENTE -->
+
 <!-- ./wrapper -->
 
 <!-- jQuery -->
