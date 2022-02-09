@@ -1,5 +1,5 @@
-function agregar_predeterminados(idart, producto){
-	let cantidad = 25;
+function agregar_predeterminados(idart, producto, cantidad){
+	//let cantidad = 25;
 	let codigo = '';
 
 	$.ajax({

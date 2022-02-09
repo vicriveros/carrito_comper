@@ -143,13 +143,15 @@
               <!-- form start -->
               
                 <div class="card-body">
-                  <button type="button" class="btn btn-info" onclick="agregar_predeterminados('1', 'OCB PREMIUM')">OCB PREMIUM</button>
-                  <button type="button" class="btn btn-info" onclick="agregar_predeterminados('3', 'OCB VIRGIN')">OCB VIRGIN</button>
-                  <button type="button" class="btn btn-info" onclick="agregar_predeterminados('2', 'OCB ORGANICO')">OCB ORGANICO</button>
-                  <button type="button" class="btn btn-info" onclick="agregar_predeterminados('4', 'OCB XPERT')">OCB XPERT</button>
-                  <button type="button" class="btn btn-info" onclick="agregar_predeterminados('6', 'OCB ULTIMATE')">OCB ULTIMATE</button>
-                  <button type="button" class="btn btn-info" onclick="agregar_predeterminados('5', 'OCB BLANCO')">OCB BLANCO</button>
-                  <button type="button" class="btn btn-info" onclick="agregar_predeterminados('13', 'OCB SLIM PREMIUM')">OCB SLIM PREMIUM</button>
+                  <button type="button" class="btn btn-info" onclick="agregar_predeterminados('1', 'OCB PREMIUM', '25')">OCB PREMIUM</button>
+                  <button type="button" class="btn btn-info" onclick="agregar_predeterminados('3', 'OCB VIRGIN', '25')">OCB VIRGIN</button>
+                  <button type="button" class="btn btn-info" onclick="agregar_predeterminados('2', 'OCB ORGANICO', '25')">OCB ORGANICO</button>
+                  <button type="button" class="btn btn-info" onclick="agregar_predeterminados('4', 'OCB XPERT', '25')">OCB XPERT</button>
+                  <button type="button" class="btn btn-info" onclick="agregar_predeterminados('6', 'OCB ULTIMATE', '25')">OCB ULTIMATE</button>
+                  <button type="button" class="btn btn-info" onclick="agregar_predeterminados('5', 'OCB BLANCO', '25')">OCB BLANCO</button>
+                  <button type="button" class="btn btn-info" onclick="agregar_predeterminados('13', 'OCB SLIM PREMIUM', '50')">OCB SLIM PREMIUM</button>
+                  <button type="button" class="btn btn-info" onclick="agregar_predeterminados('15', 'ZOMBIE ROLLING', '50')">ZOMBIE ROLLING</button>
+                  <button type="button" class="btn btn-info" onclick="agregar_predeterminados('299', 'ZOMBIE ROLLING PAPERS SLIM', '50')">ZOMBIE ROLLING PAPERS SLIM</button>
                 </div>
 
               
