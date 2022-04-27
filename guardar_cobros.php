@@ -38,7 +38,7 @@ $nextrec=$idc[0];
 $fecha=date('Y-m-d');
 if($_POST['retencion_fecha'] == ''){$_POST['retencion_fecha']='1900-01-01';}
 
-$insert_cab="insert into cabcobros (idcobro, nro, idcaja, fecha, idclie, ualta, falta, activo, efectivo, cheque, tarjeta, idsucursal, estado, anticip, ccaja, tipo, retnro, retfec, retmon)
+$insert_cab="insert into cabcobros (idcobro, nro, idcaja, fecha, idclie, ualta, falta, activo, efectivo, cheque, depoban, idsucursal, estado, anticip, ccaja, tipo, retnro, retfec, retmon)
  values ('".$nextid."', '".$nextrec."', ".$_SESSION['login_idcaja'].", '".$fecha."', '".$_POST['txt_idclie']."', ".$_SESSION['login_idusu'].", '".$fecha."', 1, '".$_POST['efectivo']."', '".$_POST['cheque']."', '".$_POST['tarjeta']."', ".$_SESSION['login_sucursal'].", 1, 0, 0, '001".$_SESSION['login_nrocaja']."', '".$_POST['retencion_nro']."', '".$_POST['retencion_fecha']."', '".$_POST['retencion_monto']."')";
 $datos = pg_query ($con, $insert_cab) or die ("Problemas en $-campos:".pg_last_error ());
 

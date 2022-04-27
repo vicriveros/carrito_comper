@@ -245,7 +245,7 @@
           <input type="number" class="form-control" name="cheque" id="cheque" value="0">
         </div>
         <div class="form-group col-md-4">
-          <label for="inputPassword4">Tarjeta</label>
+          <label for="inputPassword4">Deposito Bancario</label>
           <input type="number" class="form-control" name="tarjeta" id="tarjeta" value="0">
         </div>
       </div>

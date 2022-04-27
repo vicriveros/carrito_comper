@@ -17,6 +17,23 @@ include('_conexion.php');
 	$clie = pg_query ($con, $sqlclie) or die ("Problemas en $-campos clie:".pg_last_error ());
 	$cl=pg_fetch_array($clie);
 
+	switch ($_SESSION['login_idusu']) {
+		case 45:
+			$actividad_secundaria='Comercio al por mayor de materiales de construccion';
+			$nombre_negocio = 'DUN DUN';
+			$nombre_negocio_l2 = 'Paraguay';
+			$telefono = 'Tel.: 0981 232 217 - 0981 180 469';
+			$instagram='Instagram: @dundun_paraguay';
+			break;
+		default:
+			$actividad_secundaria='Comercio al por mayor de tabaco y cigarrillos';
+			$nombre_negocio = 'COMPER';
+			$nombre_negocio_l2 = '';
+			$telefono = 'Tel.: 0982 185 359 - 0984 289 831 - 0981 180 469';
+			$instagram='';
+			break;
+
+	}
 ?>
 <HTML>
 <HEAD>
@@ -35,7 +52,10 @@ function imprimir(){
 <div id="con_gral" style="font-size:10px; font-family:Arial;  ">
 <table width="100%">
 	<tr>
-    	<td colspan="4" style="text-align:center;">COMPER</td>
+		<td colspan="4" width="176" style="text-align:center; font-size:22px; font-family:Arial;"><strong><?php echo $nombre_negocio; ?></strong></td>
+    </tr>
+	<tr>
+		<td colspan="4" width="176" style="text-align:center; font-size:22px; font-family:Arial;"><strong><?php echo $nombre_negocio_l2; ?></strong></td>
     </tr>
 	<tr>
     	<td colspan="4" style="font-size:9px; text-align:center;">de Victor G. Perez Velázquez </td>
@@ -43,11 +63,24 @@ function imprimir(){
 	<tr>
     	<td colspan="4" style="font-size:9px; text-align:center; ">Comercio al por menor de otros productos en comercio no especializados </td>
     </tr>
+	<tr>
+    	<td colspan="4" style="font-size:9px; text-align:center; ">Comercio al por mayor de tabaco y cigarrillos</td>
+    </tr>
+	<tr>
+    	<td colspan="4" style="font-size:9px; text-align:center; ">
+		
+			<?php echo $actividad_secundaria; ?>
+
+		</td>
+    </tr>
     <tr>
     	<td colspan="5" style="font-size:9px; text-align:center;">C.Matriz: Julia Miranda Cueto e/ Ayala Candia - Fndo. de la Mora</td>
     </tr>
     <tr>
-    	<td colspan="4" style="font-size:9px; text-align:center;">Tel.: 0982 185 359 - 0984 289 831 - 0981 180 469</td>
+    	<td colspan="4" style="font-size:9px; text-align:center;"><?php echo $telefono; ?></td>
+    </tr>
+    <tr>
+    	<td colspan="4" style="font-size:9px; text-align:center;"><?php echo $instagram; ?></td>
     </tr>
     <tr>
     	<td colspan="4" style="font-size:9px; text-align:center;">RUC: 2238812-5</td>
@@ -80,22 +113,22 @@ function imprimir(){
 	}
  ?> 
 	<tr>
-    	<td colspan="4" width="176" style="text-align:left; font-size:22px; font-family:Arial;"><strong>Total:</strong> <?php echo  number_format($total_cobro, 0, ',', '.') ?></td>
+    	<td colspan="4" width="176" style="text-align:left; font-size:14px; font-family:Arial;"><strong>Total:</strong> <?php echo  number_format($total_cobro, 0, ',', '.') ?></td>
     </tr>
  	<tr>
-    	<td colspan="4" style="text-align:left; height:26px;">&nbsp;</td>
+    	<td colspan="4" style="text-align:left; font-size:12px; height:26px;">&nbsp;</td>
     </tr>
 	<tr>
-    	<th colspan="4" style="text-align:left; height:26px;"><strong>-- Datos del Cliente--</th>
+    	<th colspan="4" style="text-align:left; font-size:12px; height:26px;"><strong>-- Datos del Cliente--</th>
     </tr>
 	<tr>
-    	<td colspan="4" style="text-align:left; height:26px;">Razon Social: <?php echo $cl['nombres'] ?></td>
+    	<td colspan="4" style="text-align:left; font-size:12px; height:26px;">Razon Social: <?php echo $cl['nombres'] ?></td>
     </tr>
 	<tr>
-    	<td colspan="4" style="text-align:left; height:26px;">RUC/CI: <?php echo $cl['ruc'] ?></td>
+    	<td colspan="4" style="text-align:left; font-size:12px; height:26px;">RUC/CI: <?php echo $cl['ruc'] ?></td>
     </tr>
    	<tr>
-    	<td colspan="4" style="text-align:center; height:26px;">*Gracias por su pago*</td>
+    	<td colspan="4" style="text-align:center; font-size:14px; height:26px;">*Gracias por su pago*</td>
     </tr>
 
 </table>

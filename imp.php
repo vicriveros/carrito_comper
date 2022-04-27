@@ -2,7 +2,7 @@
 @session_start();
 include('_conexion.php'); 
 
-	$sqlcab="SELECT idclie, nro, falta, idcaja, tipofac, idventa, exentas, grav5, grav10, iva5, iva10, idvend FROM cabventas WHERE idventa=".$_GET["identificador"]." and idcaja=".$_SESSION['login_idcaja'];
+	$sqlcab="SELECT idclie, nro, falta, idcaja, tipofac, idventa, exentas, grav5, grav10, iva5, iva10, idvend, vence FROM cabventas WHERE idventa=".$_GET["identificador"]." and idcaja=".$_SESSION['login_idcaja'];
 	$cab = pg_query ($con, $sqlcab) or die ("Problemas en $-campos cabecera:".pg_last_error ());
 	$cb=pg_fetch_array($cab);
 	
@@ -29,6 +29,24 @@ include('_conexion.php');
 	$sqlvende="SELECT nombres FROM vendedores WHERE idvend=". $cb['idvend'];
 	$vende = pg_query ($con, $sqlvende) or die ("Problemas en $-campos vende:".pg_last_error ());
 	$ve=pg_fetch_array($vende);
+
+	switch ($_SESSION['login_idusu']) {
+		case 45:
+			$actividad_secundaria='Comercio al por mayor de materiales de construccion';
+			$nombre_negocio = 'DUN DUN';
+			$nombre_negocio_l2 = 'Paraguay';
+			$telefono = 'Tel.: 0981 232 217 - 0981 180 469';
+			$instagram='Instagram: @dundun_paraguay';
+			break;
+		default:
+			$actividad_secundaria='Comercio al por mayor de tabaco y cigarrillos';
+			$nombre_negocio = 'COMPER';
+			$nombre_negocio_l2 = '';
+			$telefono = 'Tel.: 0982 185 359 - 0984 289 831 - 0981 180 469';
+			$instagram='';
+			break;
+
+	}
 ?>
 <HTML>
 <HEAD>
@@ -47,7 +65,10 @@ function imprimir(){
 <div id="con_gral" style="font-size:10px; font-family:Arial;  ">
 <table width="100%">
 	<tr>
-    	<td colspan="4" style="text-align:center;">COMPER</td>
+		<td colspan="4" width="176" style="text-align:center; font-size:22px; font-family:Arial;"><strong><?php echo $nombre_negocio; ?></strong></td>
+    </tr>
+	<tr>
+		<td colspan="4" width="176" style="text-align:center; font-size:22px; font-family:Arial;"><strong><?php echo $nombre_negocio_l2; ?></strong></td>
     </tr>
 	<tr>
     	<td colspan="4" style="font-size:9px; text-align:center;">de Victor G. Perez Velázquez </td>
@@ -58,11 +79,21 @@ function imprimir(){
 	<tr>
     	<td colspan="4" style="font-size:9px; text-align:center; ">Comercio al por menor de otros productos en comercio no especializados </td>
     </tr>
+	<tr>
+    	<td colspan="4" style="font-size:9px; text-align:center; ">
+		
+			<?php echo $actividad_secundaria; ?>
+
+		</td>
+    </tr>
     <tr>
     	<td colspan="5" style="font-size:9px; text-align:center;">C.Matriz: Julia Miranda Cueto e/ Ayala Candia - Fndo. de la Mora</td>
     </tr>
     <tr>
-    	<td colspan="4" style="font-size:9px; text-align:center;">Tel.: 0982 185 359 - 0984 289 831 - 0981 180 469</td>
+    	<td colspan="4" style="font-size:9px; text-align:center;"><?php echo $telefono; ?></td>
+    </tr>
+    <tr>
+    	<td colspan="4" style="font-size:9px; text-align:center;"><?php echo $instagram; ?></td>
     </tr>
     <tr>
     	<td colspan="4" style="font-size:9px; text-align:center;">RUC: 2238812-5</td>
@@ -74,18 +105,25 @@ function imprimir(){
     	<td colspan="4" style="font-size:9px; text-align:center;">Inicio:<?php echo date("d-m-Y", strtotime($nca['inicio'])) ?> Vencimiento:<?php echo date("d-m-Y", strtotime($nca['validez'])) ?></td>
     </tr>
     <tr>
-    	<td colspan="4" style="font-size:9px; text-align:center;">Fecha de Emision: <?php echo date("d-m-Y", strtotime($cb['falta']))?></td>
+    	<td colspan="4" style="font-size:9px; text-align:center;">Fecha de Emisión: <?php echo date("d-m-Y", strtotime($cb['falta']))?></td>
     </tr>
+	<?php
+		if($tipofac==2){
+		echo '
+		<tr>
+    		<td colspan="4" style="font-size:9px; text-align:center;">Fecha de Vencimiento: '. date("d-m-Y", strtotime($cb['vence'])).'</td>
+		</tr>';
+	}?>
     <tr>
     	<td colspan="4" style="font-size:9px; text-align:center;">Factura <?php if ($cb['tipofac'] == 1) { echo "Contado";}else{ echo "Credito";} ?>
             
           N°:<?php echo $suc[0] ?>-<?php echo $nca[0] ?>-<?php echo $nroini.$cb["nro"] ?></td>
     </tr>
 	<tr>
-    	<th width="38">Cant.</th>
-    	<th width="176">Articulo</th>
-    	<th width="176">Precio</th>
-    	<th width="176">Total</th>
+    	<th width="38" style="font-size:12px";>Cant.</th>
+    	<th width="176" style="font-size:12px">Articulo</th>
+    	<th width="176" style="font-size:12px">Precio</th>
+    	<th width="176" style="font-size:12px">Total</th>
     </tr>
 	<?php 
 	$tot=0;
@@ -103,14 +141,14 @@ function imprimir(){
 	$tot=$tot+$tot1;
 	?>
 	<tr>
-    	<td width="38"><?php echo number_format($dt['cant'], 0, ',', '.'); ?></td>
-    	<td colspan="3" width="400"><?php echo $art; ?></td>
+    	<td width="38" style="font-size:11px"><?php echo number_format($dt['cant'], 0, ',', '.'); ?></td>
+    	<td colspan="3" style="font-size:11px" width="400"><?php echo $art; ?></td>
 	</tr>
 	<tr>
-		<td width="38"></td>
-		<td width="38"></td>
-    	<td width="38"><?php echo number_format($dt['precio'], 0, ',', '.'); ?></td>
-    	<td width="38"><?php echo number_format($tot1, 0, ',', '.'); ?></td>
+		<td width="38" style="font-size:11px"></td>
+		<td width="38" style="font-size:11px"></td>
+    	<td width="38" style="font-size:11px"><?php echo number_format($dt['precio'], 0, ',', '.'); ?></td>
+    	<td width="38" style="font-size:11px"><?php echo number_format($tot1, 0, ',', '.'); ?></td>
     </tr>
     
  <?php 
@@ -118,47 +156,47 @@ function imprimir(){
 	$totiva=$cb['iva10']+$cb['iva5'];
  ?> 
 	<tr>
-    	<td colspan="4" width="176" style="text-align:left; font-size:22px; font-family:Arial;"><strong>Total:</strong> <?php echo  number_format($tot, 0, ',', '.') ?></td>
+    	<td colspan="4" width="176" style="text-align:left; font-size:14px; font-family:Arial;"><strong>Total:</strong> <?php echo  number_format($tot, 0, ',', '.') ?></td>
     </tr>
 
  	<tr>
-    	<td colspan="4" style="text-align:left; height:26px;">&nbsp;</td>
+    	<td colspan="4" style="text-align:left; font-size:12px; height:26px;">&nbsp;</td>
     </tr>
 	<tr>
-    	<th colspan="4" style="text-align:left; height:26px;"><strong>-- Datos del Cliente--</th>
+    	<th colspan="4" style="text-align:left; font-size:12px; height:26px;"><strong>-- Datos del Cliente--</th>
     </tr>
 	<tr>
-    	<td colspan="4" style="text-align:left; height:26px;">Razon Social: <?php echo $cl['nombres'] ?></td>
+    	<td colspan="4" style="text-align:left; font-size:12px; height:26px;">Razon Social: <?php echo $cl['nombres'] ?></td>
     </tr>
 	<tr>
-    	<td colspan="4" style="text-align:left; height:26px;">RUC/CI: <?php echo $cl['ruc'] ?></td>
+    	<td colspan="4" style="text-align:left; font-size:12px; height:26px;">RUC/CI: <?php echo $cl['ruc'] ?></td>
     </tr>
 	<tr>
-    	<td colspan="4" style="text-align:left; height:26px;">Telefono: <?php echo $cl['telefono'] ?></td>
+    	<td colspan="4" style="text-align:left; font-size:12px; height:26px;">Telefono: <?php echo $cl['telefono'] ?></td>
     </tr>  
 	<tr>
-    	<td colspan="4" style="text-align:left; height:26px;">Direccion: <?php echo $cl['direccion'] ?></td>
+    	<td colspan="4" style="text-align:left; font-size:12px; height:26px;">Direccion: <?php echo $cl['direccion'] ?></td>
     </tr>
 	<tr>
-    	<td colspan="4" style="text-align:left; height:26px;">Ciudad: <?php echo $cl['ciudad'] ?></td>
+    	<td colspan="4" style="text-align:left; font-size:12px; height:26px;">Ciudad: <?php echo $cl['ciudad'] ?></td>
     </tr>
 	<tr>
-    	<td colspan="4" style="text-align:left; height:26px;">Vendedor: <?php echo $ve['nombres'] ?></td>
+    	<td colspan="4" style="text-align:left; font-size:12px; height:26px;">Vendedor: <?php echo $ve['nombres'] ?></td>
     </tr>
 	<tr>
-    	<td colspan="4" style="text-align:left; height:26px;"><strong>-- Liquidacion de IVA --</td>
+    	<td colspan="4" style="text-align:left; font-size:12px; height:26px;"><strong>-- Liquidacion de IVA --</td>
     </tr>
 	<tr>
-    	<td colspan="4" style="text-align:left; height:26px;">10%:<?php echo round($cb['iva10']); ?></td>
+    	<td colspan="4" style="text-align:left; font-size:12px; height:26px;">10%:<?php echo round($cb['iva10']); ?></td>
     </tr>
 	<tr>
-    	<td colspan="4" style="text-align:left; height:26px;">5%:<?php echo round($cb['iva5']); ?></td>
+    	<td colspan="4" style="text-align:left; font-size:12px; height:26px;">5%:<?php echo round($cb['iva5']); ?></td>
     </tr>
 	<tr>
-    	<td colspan="4" style="text-align:left; height:26px;"><strong>Total IVA:<?php echo round($totiva); ?></td>
+    	<td colspan="4" style="text-align:left; font-size:12px; font-size:12px; height:26px;"><strong>Total IVA:<?php echo round($totiva); ?></td>
     </tr>
  	<tr>
-    	<td colspan="4" style="text-align:left; height:26px;">&nbsp;</td>
+    	<td colspan="4" style="text-align:left; font-size:12px; height:26px;">&nbsp;</td>
     </tr>
     </tr>
 	<?php
@@ -181,7 +219,10 @@ if($tipofac==2){
 <div id="con_gral" style="font-size:10px; font-family:Arial;  ">
 <table width="100%">
 	<tr>
-    	<td colspan="4" style="text-align:center;">COMPER</td>
+    	<td colspan="4" style="text-align:center;">'.$nombre_negocio.'</td>
+    </tr>
+	<tr>
+    	<td colspan="4" style="text-align:center;">'.$nombre_negocio_l2.'</td>
     </tr>
 	<tr>
     	<td colspan="4" style="font-size:9px; text-align:center;">de Victor G. Perez Velázquez </td>
@@ -189,11 +230,21 @@ if($tipofac==2){
 	<tr>
     	<td colspan="4" style="font-size:9px; text-align:center; ">Comercio al por menor de otros productos en comercio no especializados </td>
     </tr>
+	<tr>
+    	<td colspan="4" style="font-size:9px; text-align:center; ">
+		
+			'.$actividad_secundaria.'
+	
+		</td>
+    </tr>
     <tr>
     	<td colspan="5" style="font-size:9px; text-align:center;">C.Matriz: Julia Miranda Cueto e/ Ayala Candia - Fndo. de la Mora</td>
     </tr>
     <tr>
-    	<td colspan="4" style="font-size:9px; text-align:center;">Tel.: 0982 185 359 - 0984 289 831 - 0981 180 469</td>
+    	<td colspan="4" style="font-size:9px; text-align:center;">'.$telefono.'</td>
+    </tr>
+    <tr>
+    	<td colspan="4" style="font-size:9px; text-align:center;">'.$instagram.'</td>
     </tr>
     <tr>
     	<td colspan="4" style="font-size:9px; text-align:center;">RUC: 2238812-5</td>
@@ -208,15 +259,18 @@ if($tipofac==2){
     	<td colspan="4" style="font-size:9px; text-align:center;">Fecha de Emision: '.date("d-m-Y", strtotime($cb['falta'])).'</td>
     </tr>
     <tr>
+    	<td colspan="4" style="font-size:9px; text-align:center;">Fecha de Vencimiento: '.date("d-m-Y", strtotime($cb['vence'])).'</td>
+    </tr>
+    <tr>
     	<td colspan="4" style="font-size:9px; text-align:center;">Factura Crédito
             
           N°:'.$suc[0]. '-' . $nca[0] .'-'. $nroini.$cb["nro"] .'</td>
     </tr>
 	<tr>
-    	<th width="38">Cant.</th>
-    	<th width="176">Articulo</th>
-    	<th width="176">Precio</th>
-    	<th width="176">Total</th>
+    	<th width="38" style="font-size:12px">Cant.</th>
+    	<th width="176" style="font-size:12px">Articulo</th>
+    	<th width="176" style="font-size:12px">Precio</th>
+    	<th width="176" style="font-size:12px">Total</th>
     </tr>';
 	$tot=0;
 	$sqldet="SELECT idart, cant, (precio*1.1) as precio FROM detventas WHERE idventa=".$_GET['identificador'];
@@ -234,51 +288,51 @@ if($tipofac==2){
 	echo
 	'
 	<tr>
-    	<td width="38">'.number_format($dt["cant"], 0, ",", ".").'</td>
-    	<td colspan="3" width="400">'.$art.'</td>
+    	<td width="38" style="font-size:9px">'.number_format($dt["cant"], 0, ",", ".").'</td>
+    	<td colspan="3" width="400" style="font-size:9px">'.$art.'</td>
 	</tr>
 	<tr>
-		<td width="38"></td>
-		<td width="38"></td>
-    	<td width="38">'. number_format($dt['precio'], 0, ',', '.').'</td>
-    	<td width="38">'. number_format($tot1, 0, ',', '.') .'</td>
+		<td width="38" style="font-size:11px"></td>
+		<td width="38" style="font-size:11px"></td>
+    	<td width="38" style="font-size:11px">'. number_format($dt['precio'], 0, ',', '.').'</td>
+    	<td width="38" style="font-size:11px">'. number_format($tot1, 0, ',', '.') .'</td>
     </tr>';
 }
 	$totiva=$cb['iva10']+$cb['iva5'];
  echo 
  '
 	<tr>
-    	<td colspan="4" width="176" style="text-align:left; font-size:22px; font-family:Arial;"><strong>Total:</strong> '. number_format($tot, 0, ',', '.') .'</td>
+    	<td colspan="4" width="176" style="text-align:left; font-size:14px; font-family:Arial;"><strong>Total:</strong> '. number_format($tot, 0, ',', '.') .'</td>
     </tr>
  	<tr>
-    	<td colspan="4" style="text-align:left; height:26px;">&nbsp;</td>
+    	<td colspan="4" style="text-align:left; font-size:12px; height:26px;">&nbsp;</td>
     </tr>
 	<tr>
-    	<th colspan="4" style="text-align:left; height:26px;"><strong>-- Datos del Cliente--</th>
+    	<th colspan="4" style="text-align:left; font-size:12px; height:26px;"><strong>-- Datos del Cliente--</th>
     </tr>
 	<tr>
-    	<td colspan="4" style="text-align:left; height:26px;">Razon Social: '. $cl['nombres'] .'</td>
+    	<td colspan="4" style="text-align:left; font-size:12px; height:26px;">Razon Social: '. $cl['nombres'] .'</td>
     </tr>
 	<tr>
-    	<td colspan="4" style="text-align:left; height:26px;">RUC/CI: '.$cl['ruc'] .'</td>
+    	<td colspan="4" style="text-align:left; font-size:12px; height:26px;">RUC/CI: '.$cl['ruc'] .'</td>
     </tr>
 	<tr>
-		<td colspan="4" style="text-align:left; height:26px;">RUC/CI: '.$ve['nombres'] .'</td>
+		<td colspan="4" style="text-align:left; font-size:12px; height:26px;">RUC/CI: '.$ve['nombres'] .'</td>
 	</tr>
 	<tr>
-    	<td colspan="4" style="text-align:left; height:26px;"><strong>-- Liquidacion de IVA --</td>
+    	<td colspan="4" style="text-align:left; font-size:12px; height:26px;"><strong>-- Liquidacion de IVA --</td>
     </tr>
 	<tr>
-    	<td colspan="4" style="text-align:left; height:26px;">10%:'.round($cb['iva10']).'</td>
+    	<td colspan="4" style="text-align:left; font-size:12px; height:26px;">10%:'.round($cb['iva10']).'</td>
     </tr>
 	<tr>
-    	<td colspan="4" style="text-align:left; height:26px;">5%:'. round($cb['iva5']).'</td>
+    	<td colspan="4" style="text-align:left; font-size:12px; height:26px;">5%:'. round($cb['iva5']).'</td>
     </tr>
 	<tr>
-    	<td colspan="4" style="text-align:left; height:26px;"><strong>Total IVA:'. round($totiva).'</td>
+    	<td colspan="4" style="text-align:left; font-size:12px; height:26px;"><strong>Total IVA:'. round($totiva).'</td>
     </tr>
  	<tr>
-    	<td colspan="4" style="text-align:left; height:26px;">&nbsp;</td>
+    	<td colspan="4" style="text-align:left; font-size:12px; height:26px;">&nbsp;</td>
     </tr>
 	<tr>
 		<td colspan="4" style="font-size:9px; text-align:center; height:26px;">Esta factura deberá ser cancelada dentro del plazo establecido, de no ser asi aplicara el 3% de interes mensual. Los autorizo incluyan mi nombre o la razón social que represento en el registro general de morosos de inforconf o el de otra entidad especializada en el mismo, y proporcionar dicha información a terceras personas</td>
