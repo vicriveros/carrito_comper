@@ -37,8 +37,8 @@ $_POST['txt_tot']=$totgral - $_POST['txt_desc'];
 			echo '<script>location.href="index.php";</script>';
 		}
 
-		$cnro =pg_query ($con, "SELECT max(nro) FROM cabventas WHERE idcaja=".$_SESSION['login_idcaja']) or die ("Problemas en $-campos:".pg_last_error ());
-		$rn=pg_fetch_array($cnro);
+		$cnro =pg_query ($con, "SELECT max(nro) FROM cabventas WHERE idtimb=".$_SESSION['login_idtimb']) or die ("Problemas en $-campos:".pg_last_error ());
+		$rn=pg_fetch_array($cnro); 
 		$nnro=$rn[0];
 		$nro= $nnro+1;
 		$cnro =pg_query ($con, "SELECT max(idventa) FROM cabventas") or die ("Problemas en $-campos:".pg_last_error ());

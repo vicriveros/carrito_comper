@@ -38,7 +38,7 @@ include('_conexion.php');
 <?php
   if(count($_SESSION['detalle'])>0){
     foreach($_SESSION['detalle'] as $k => $detalle){ 
-    $datos = pg_query ($con, "SELECT precio, precio2, precio3, precio4 FROM articulos WHERE idart='".$detalle['idart']."'") 
+    $datos = pg_query ($con, "SELECT precio, precio2, precio3, precio4, precio5, precio6 FROM articulos WHERE idart='".$detalle['idart']."'") 
       or die ("Problemas:".pg_last_error ());
     $dt=pg_fetch_array($datos);
 ?>
@@ -71,7 +71,9 @@ include('_conexion.php');
                   <option value="<?php echo $dt['precio2']; ?>" selected>Precio 2 - <?php echo number_format($dt['precio2'], 0, ',', '.'); ?></option>
                   <?php if($dt['precio3']>0){echo '<option value="'.$dt['precio3'].'">Precio 3 -'. number_format($dt['precio3'], 0, ",", ".").'</option>';};?>
                   <?php if($dt['precio4']>0){echo '<option value="'.$dt['precio4'].'">Precio 4 -'. number_format($dt['precio4'], 0, ",", ".").'</option>';};?>
-            </select>
+                  <?php if($dt['precio5']>0){echo '<option value="'.$dt['precio5'].'">Precio 5 -'. number_format($dt['precio5'], 0, ",", ".").'</option>';};?>
+                  <?php if($dt['precio6']>0){echo '<option value="'.$dt['precio6'].'">Precio 6 -'. number_format($dt['precio6'], 0, ",", ".").'</option>';};?>
+              </select>
             
           </div>
         </div>

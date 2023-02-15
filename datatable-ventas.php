@@ -8,7 +8,7 @@ include('_conexion.php');
     $datosJson = '{
          "data": [';
 
-        while($ventas=pg_fetch_array($consulta)){
+        while($ventas=pg_fetch_array($consulta)){ 
 
                 $botones = "<a href=imp.php?identificador='".$ventas['idventa']."' target='_blank' name='cerrarf'  id='cerrarf' class='btn btn-info btn-confirmar-venta' style='margin-top:20px'>Imprimir</a>";
                 
