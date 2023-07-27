@@ -15,7 +15,7 @@ include('_conexion.php');
     
                 while($ventas=pg_fetch_array($consulta)){
                     //cobros
-                    $sql_pagos="SELECT sum(monto - interes) from detcobros where idventa=".$ventas['idventa'];
+                    $sql_pagos="SELECT sum(a.monto - a.interes) from detcobros a inner join cabcobros b on a.idcobro=b.idcobro where b.activo=1 and a.idventa=".$ventas['idventa'];
                     $consulta_pagos=pg_query($con, $sql_pagos)or die ("Problemas en:".pg_last_error ());
                     $sum_pagos=pg_fetch_array($consulta_pagos);
                     //nota de credito

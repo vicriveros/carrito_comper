@@ -2,7 +2,7 @@
 @session_start();
 include('_conexion.php'); 
 
-	$sqlcab="SELECT idclie, nro, falta, idcaja, tipofac, idventa, exentas, grav5, grav10, iva5, iva10, idvend, vence FROM cabventas WHERE idventa=".$_GET["identificador"]." and idcaja=".$_SESSION['login_idcaja'];
+	$sqlcab="SELECT idclie, nro, falta, idcaja, tipofac, idventa, exentas, grav5, grav10, iva5, iva10, idvend, vence FROM cabventas WHERE idventa=".$_GET["identificador"];
 	$cab = pg_query ($con, $sqlcab) or die ("Problemas en $-campos cabecera:".pg_last_error ());
 	$cb=pg_fetch_array($cab);
 	
@@ -317,7 +317,16 @@ if($tipofac==2){
     	<td colspan="4" style="text-align:left; font-size:12px; height:26px;">RUC/CI: '.$cl['ruc'] .'</td>
     </tr>
 	<tr>
-		<td colspan="4" style="text-align:left; font-size:12px; height:26px;">RUC/CI: '.$ve['nombres'] .'</td>
+    	<td colspan="4" style="text-align:left; font-size:12px; height:26px;">Telefono: '.$cl['telefono'].'</td>
+    </tr>  
+	<tr>
+    	<td colspan="4" style="text-align:left; font-size:12px; height:26px;">Direccion: '.$cl['direccion'].'</td>
+    </tr>
+	<tr>
+    	<td colspan="4" style="text-align:left; font-size:12px; height:26px;">Ciudad: '.$cl['ciudad'].'</td>
+    </tr>
+	<tr>
+		<td colspan="4" style="text-align:left; font-size:12px; height:26px;">Vendedor: '.$ve['nombres'] .'</td>
 	</tr>
 	<tr>
     	<td colspan="4" style="text-align:left; font-size:12px; height:26px;"><strong>-- Liquidacion de IVA --</td>
