@@ -16,6 +16,18 @@ switch($page){
 		$json['success'] = true;
 	
 		if ($_POST['producto']!='' && $_POST['cantidad'] > 0) {
+			/** Validacion de Articulos */
+			$match=false;
+			foreach($_SESSION['detalle'] as $k => $detalle){
+				if($detalle["idart"] == $_POST['idart']){ $match=true; }
+			}
+			if ($match == true) {
+				$json['msj'] = 'El articulo ya fue cargado';
+				$json['success'] = false;
+				echo json_encode($json);
+			}else{
+			/** Validacion de Articulos */
+
 			$datos = pg_query ($con, "SELECT codfab, precio2 FROM articulos WHERE idart='".$_POST['idart']."'") or die ("Problemas en $-campos:".pg_last_error ());
 				$dt=pg_fetch_array($datos);
 				$precio= $dt["precio2"];
@@ -24,9 +36,26 @@ switch($page){
 			$stock=pg_query ($con, "SELECT cant, idart FROM detstock WHERE idart=".$_POST['idart']." and iddeposito=".$_SESSION['login_deposito']) or die ("Problemas en $-campos:".pg_last_error ());
 				$result=pg_fetch_array($stock);		
 				$cntStock=$result["cant"];
-
 				$cantidad = $_POST['cantidad'];
 
+				/*stock COMBOS*/
+					$stockComboValidation = true;
+					$sqlSubArt="SELECT idsubart, cant FROM subarticulos WHERE idart=".$_POST["idart"];
+					$subArt = pg_query ($con, $sqlSubArt) or die ("Problemas en $-campos sqlSubArt:".pg_last_error ());
+					$cantRows=pg_num_rows($subArt);
+					if($cantRows > 0){
+						while ($sa=pg_fetch_array($subArt)) {
+							$sqlStock="SELECT cant FROM detstock WHERE idart=".$sa["idsubart"]." and iddeposito=".$_SESSION['login_deposito'];
+							$qStock = pg_query ($con, $sqlStock) or die ("Problemas en $-campos cant stk sub art:".pg_last_error ());
+							$stk=pg_fetch_array($qStock);
+							if($stk["cant"] <= 0){
+								$stockComboValidation = false;
+							}
+						}
+					}
+	
+			if($stockComboValidation == true){/*stock COMBOS*/
+					
 			if($cantidad<=$cntStock){
 			
 				try {
@@ -59,6 +88,12 @@ switch($page){
 				echo json_encode($json);
 
 			}
+			}else{ /*stock COMBOS*/
+				$json['msj'] = 'Los articulos componentes del combo no tienen stock disponible';
+				$json['success'] = false;
+				echo json_encode($json);
+			}
+		}/** Validacion de Articulos */
 		}else{
 				if ($_POST['codigo']!='' && $_POST['cantidad'] > 0) {
 					$datos = pg_query ($con, "SELECT nombres, idart, codfab, precio FROM articulos WHERE codfab='".$_POST['codigo']."'") or die ("Problemas en $-campos:".pg_last_error ());

@@ -104,6 +104,7 @@
                 <!-- /.card-body -->
                 <div class="card-footer">
                   <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal" id="confirm">Confirmar Venta</button>
+                  <a href="imp_sugerida.php" class="btn btn-info">Imprimir Sugerido</a>
                 </div>
               
             </div>

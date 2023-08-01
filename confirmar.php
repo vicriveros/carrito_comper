@@ -114,7 +114,24 @@ foreach($_SESSION['detalle'] as $k => $detalle){
 			$insertstk = pg_query ($con, $sqlin) or die ("Problemas en $-campos deposito 3 stock:".pg_last_error ());
 		}
 	/*stock*/
+	
+	/*stock COMBOS*/
+		$sqlSubArt="SELECT idsubart, cant FROM subarticulos WHERE idart=".$detalle["idart"];
+        $subArt = pg_query ($con, $sqlSubArt) or die ("Problemas en $-campos art recetario:".pg_last_error ());
+        $cantRows=pg_num_rows($subArt);
+		if($cantRows > 0){
+			while ($sa=pg_fetch_array($subArt)) {
+                $sqlStock="SELECT cant FROM detstock WHERE idart=".$sa["idsubart"]." and iddeposito=".$_SESSION['login_deposito'];
+                $qStock = pg_query ($con, $sqlStock) or die ("Problemas en $-campos cant stk sub art:".pg_last_error ());
+                $stk=pg_fetch_array($qStock);
+				$cantact=$stk["cant"] - $sa["cant"];
 
+				$sqlup="UPDATE detstock SET cant=".$cantact." WHERE idart=".$sa['idsubart']." and iddeposito=".$_SESSION['login_deposito'];
+				$updatestk = pg_query ($con, $sqlup) or die ("Problemas en $-campos udpdate stock:".pg_last_error ());
+            }
+		}
+	/*stock COMBOS*/
+	
 	/*trackart*/
 	$tnro =pg_query ($con, "SELECT max(idtrack) FROM trackart") or die ("Problemas en $-campos:".pg_last_error ());
 	$tn=pg_fetch_array($tnro);
