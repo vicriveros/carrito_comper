@@ -124,7 +124,9 @@ foreach($_SESSION['detalle'] as $k => $detalle){
                 $sqlStock="SELECT cant FROM detstock WHERE idart=".$sa["idsubart"]." and iddeposito=".$_SESSION['login_deposito'];
                 $qStock = pg_query ($con, $sqlStock) or die ("Problemas en $-campos cant stk sub art:".pg_last_error ());
                 $stk=pg_fetch_array($qStock);
-				$cantact=$stk["cant"] - $sa["cant"];
+				$cantVendida = $sa["cant"] * $detalle["cantidad"];
+				$cantact=$stk["cant"] - $cantVendida;
+				
 
 				$sqlup="UPDATE detstock SET cant=".$cantact." WHERE idart=".$sa['idsubart']." and iddeposito=".$_SESSION['login_deposito'];
 				$updatestk = pg_query ($con, $sqlup) or die ("Problemas en $-campos udpdate stock:".pg_last_error ());
@@ -135,7 +137,7 @@ foreach($_SESSION['detalle'] as $k => $detalle){
 				$tnro= $tn[0]+1;
 				
 				$sqltrack = "INSERT INTO trackart (idtrack, idart, idtipo, idoc, ualta, stk, entrada, salida, saldo, descrip, falta, iddeposito, usuario) VALUES
-				(".$tnro.", ".$sa["idart"].", 2, ".$idventa.", ".$_SESSION['login_idusu'].", ".$stk["cant"].", 0, ".$sa["cant"].", ".$cantact.", '".$descrip."', '".$fecha."', ".$_SESSION['login_deposito'].", ".$_SESSION['login_idusu'].")";
+				(".$tnro.", ".$sa["idsubart"].", 2, ".$idventa.", ".$_SESSION['login_idusu'].", ".$stk["cant"].", 0, ".$sa["cant"].", ".$cantact.", '".$descrip."', '".$fecha."', ".$_SESSION['login_deposito'].", ".$_SESSION['login_idusu'].")";
 				$inserttrack = pg_query ($con, $sqltrack) or die ("Problemas en $-campos insert trackart:".pg_last_error ());
 				
 				/*trackart COMBOS*/
