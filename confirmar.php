@@ -113,6 +113,18 @@ foreach($_SESSION['detalle'] as $k => $detalle){
 			$sqlin="INSERT INTO detstock (idart, cant, iddeposito) VALUES (".$detalle["idart"].", ".$cantact.", ".$_SESSION['login_deposito'].")";
 			$insertstk = pg_query ($con, $sqlin) or die ("Problemas en $-campos deposito 3 stock:".pg_last_error ());
 		}
+
+			/*trackart*/
+			$tnro =pg_query ($con, "SELECT max(idtrack) FROM trackart") or die ("Problemas en $-campos:".pg_last_error ());
+			$tn=pg_fetch_array($tnro);
+			$tnro= $tn[0]+1;
+			
+			$sqltrack = "INSERT INTO trackart (idtrack, idart, idtipo, idoc, ualta, stk, entrada, salida, saldo, descrip, falta, iddeposito, usuario) VALUES
+			(".$tnro.", ".$detalle["idart"].", 2, ".$idventa.", ".$_SESSION['login_idusu'].", ".$cant.", 0, ".$detalle["cantidad"].", ".$cantact.", '".$descrip."', '".$fecha."', ".$_SESSION['login_deposito'].", ".$_SESSION['login_idusu'].")";
+			$inserttrack = pg_query ($con, $sqltrack) or die ("Problemas en $-campos insert trackart:".pg_last_error ());
+			
+			/*trackart*/
+			
 	/*stock*/
 	
 	/*stock COMBOS*/
@@ -137,7 +149,7 @@ foreach($_SESSION['detalle'] as $k => $detalle){
 				$tnro= $tn[0]+1;
 				
 				$sqltrack = "INSERT INTO trackart (idtrack, idart, idtipo, idoc, ualta, stk, entrada, salida, saldo, descrip, falta, iddeposito, usuario) VALUES
-				(".$tnro.", ".$sa["idsubart"].", 2, ".$idventa.", ".$_SESSION['login_idusu'].", ".$stk["cant"].", 0, ".$sa["cant"].", ".$cantact.", '".$descrip."', '".$fecha."', ".$_SESSION['login_deposito'].", ".$_SESSION['login_idusu'].")";
+				(".$tnro.", ".$sa["idsubart"].", 2, ".$idventa.", ".$_SESSION['login_idusu'].", ".$stk["cant"].", 0, ".$cantVendida.", ".$cantact.", '".$descrip."', '".$fecha."', ".$_SESSION['login_deposito'].", ".$_SESSION['login_idusu'].")";
 				$inserttrack = pg_query ($con, $sqltrack) or die ("Problemas en $-campos insert trackart:".pg_last_error ());
 				
 				/*trackart COMBOS*/
@@ -145,16 +157,7 @@ foreach($_SESSION['detalle'] as $k => $detalle){
 		}
 	/*stock COMBOS*/
 	
-	/*trackart*/
-	$tnro =pg_query ($con, "SELECT max(idtrack) FROM trackart") or die ("Problemas en $-campos:".pg_last_error ());
-	$tn=pg_fetch_array($tnro);
-	$tnro= $tn[0]+1;
-	
-	$sqltrack = "INSERT INTO trackart (idtrack, idart, idtipo, idoc, ualta, stk, entrada, salida, saldo, descrip, falta, iddeposito, usuario) VALUES
-	 (".$tnro.", ".$detalle["idart"].", 2, ".$idventa.", ".$_SESSION['login_idusu'].", ".$cant.", 0, ".$detalle["cantidad"].", ".$cantact.", '".$descrip."', '".$fecha."', ".$_SESSION['login_deposito'].", ".$_SESSION['login_idusu'].")";
-	 $inserttrack = pg_query ($con, $sqltrack) or die ("Problemas en $-campos insert trackart:".pg_last_error ());
-	
-	/*trackart*/
+
 
 } /*fin de forech detalle*/
 
