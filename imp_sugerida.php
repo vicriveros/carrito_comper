@@ -15,6 +15,7 @@ function imprimir(){
 	}
 }
 </SCRIPT>
+<link rel="stylesheet" href="dist/css/adminlte.min.css">
 </HEAD>
 <body onLoad="imprimir();">
 <div id="con_gral" style="font-size:10px; font-family:Arial;  ">
@@ -64,12 +65,12 @@ function imprimir(){
 
 </table>
 </div>
-
+<a href="cabecera.php?clie_id=<?php echo $_GET[clie_id]; ?>&vta=<?php echo $_GET[vta]; ?>" class="btn btn-info">Volver Atras</a>
 </BODY>
 </HTML>
 <script type="text/javascript">
 function redireccionarPagina() {
-	window.location = "cabecera.php";
+	window.location = "cabecera.php?clie_id=<?php echo $_GET[clie_id]; ?>&vta=<?php echo $_GET[vta]; ?>";
 }
 //setTimeout("redireccionarPagina()", 800);
 </script>

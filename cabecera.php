@@ -14,6 +14,10 @@
     $dtcp=pg_fetch_array($datoscp);
 
   }
+
+  if($_GET['cancel'] == 1){
+    unset($_SESSION['detalle']);
+  }
 ?>
 
 <!DOCTYPE html>
@@ -104,7 +108,10 @@
                 <!-- /.card-body -->
                 <div class="card-footer">
                   <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal" id="confirm">Confirmar Venta</button>
-                  <a href="imp_sugerida.php" class="btn btn-info">Imprimir Sugerido</a>
+
+                  <button type="button" onclick="javascript:impSugerido()" class="btn btn-info btn-imp-sugerido">Imprimir Sugerido</button>
+
+                  <a href="cabecera.php?cancel=1" style="float: right;" class="btn btn-danger">Cancelar</a>
                 </div>
               
             </div>
@@ -383,6 +390,10 @@ if ($_GET['clie_id']) {
   echo'
   <script>
     $(document).ready(function(){ 
+      let tipovta = "'.$_GET['vta'].'";
+      if(tipovta == ""){$("#txt_venta").val( "1" );}else{$("#txt_venta").val( tipovta);}
+      
+
       $("#txt_idclie").val( "'.$_GET['clie_id'].'" );
       $("#txt_cliente").val("'.$dtcp[nombres].' | '.$dtcp[barrio].' | '.$dtcp[ruc].'");
       $("#txt_nombre").val("'.$dtcp[nombres].'");
@@ -542,6 +553,13 @@ if ($_GET['clie_id']) {
     $("#ubicacion").val("Su navegador no soporta la API de geolocalización.");
 	}
 };
+
+function impSugerido (){
+  let clie = document.getElementById('txt_idclie').value;
+  let vta = document.getElementById('txt_venta').value;
+  let url = `imp_sugerida.php?clie_id=${clie}&vta=${vta}`;
+  window.location = url;
+}
   </script>
 
 </body>
